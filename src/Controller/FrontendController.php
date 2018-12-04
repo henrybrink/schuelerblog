@@ -74,7 +74,7 @@ class FrontendController extends AbstractController
     }
 
     /**
-     * @Route("/{page}", name="showPage")
+     * @Route("/page/{page}", name="showPage")
      */
     public function pageShow($page) {
     }
