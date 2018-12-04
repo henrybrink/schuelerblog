@@ -1,0 +1,18 @@
+{% include('frontend/header.html.twig') %}
+
+<div class="site-eyecatcher">
+    <h1>{{ post.title }}</h1>
+    <div class="site-eyecatcher-overlay"></div>
+</div>
+
+<div class="textcontainer" id="textcontainer-startseite">
+
+    <div class="image-container">
+        <img src="{{ path('loadPostImage', {'post': post.id}) }}" ">
+    </div>
+
+    <p>{{ post.content | raw }}</p>
+
+</div>
+
+{% include('frontend/footer.html.twig') %}

@@ -1,0 +1,44 @@
+{% include('db.header.html.twig') %}
+
+{% block body %}
+
+    <div class="ui container">
+
+        <form method="post" class="ui form">
+            {% if error %}
+                <div class="ui negative message">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
+
+            <h1 class="h3 mb-3 font-weight-normal">Bitte melden Sie sich an!</h1>
+
+            <div class="ui secondary message">
+                <b>Achtung!</b> Die IServ-Anmeldung findest du unter https://gymnasium-oesede.net - bitte melde dich hier NICHT mit deinen IServ-Anmeldedaten an!
+            </div>
+
+            <div class="field">
+                <label for="inputUsername" class="sr-only">Username</label>
+                <input type="text" value="{{ last_username }}" name="username" id="inputUsername" placeholder="Benutzername" required autofocus>
+            </div>
+
+            <div class="field">
+                <label for="inputPassword" class="sr-only">Password</label>
+                <input type="password" name="password" id="inputPassword" placeholder="Passwort" required>
+            </div>
+
+            <input type="hidden" name="_csrf_token"
+                   value="{{ csrf_token('authenticate') }}"
+            >
+
+            <div class="field">
+                <button class="ui primary fluid button" type="submit">
+                    Anmelden
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+{% endblock %}
+
+{% include('db.footer.html.twig') %}

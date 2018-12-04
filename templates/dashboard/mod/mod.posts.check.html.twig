@@ -1,0 +1,113 @@
+{% extends 'db.template.html.twig' %}
+
+{% block content %}
+
+    <div class="ui modal">
+        <div class="header">
+            Beitrag ablehnen
+        </div>
+        <div class="content">
+            <div class="ui medium image">
+                <img src="/images/avatar/large/chris.jpg">
+            </div>
+            <div class="description">
+                <p>Wenn Sie einen Beitrag ablehnen möchten, sollten Sie einen Grund spezifizieren, damit der Autor weiß, warum sein Beitrag abgelehnt wurde, der Autor kann einen abgelehnten Beitrag jederzeit erneut einreichen.</p>
+
+                <form class="ui form" method="post" action="/dashboard/moderation/posts/deny/{{ post.id }}">
+
+                    <div class="field">
+                        <textarea name="reason" placeholder="Grund für die Ablehnung"></textarea>
+                    </div>
+
+                    <div class="field">
+                        <button class="ui button negative fluid"><i class="fas fa-lock"></i> Ablehnen</button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+        <div class="actions">
+            <button class="ui secondary button deny" onclick="$('.ui.modal').modal('hide');">
+                Abbrechen
+            </button>
+        </div>
+    </div>
+
+
+
+    {% for message in app.flashes('success') %}
+        <div class="ui positive message">{{ message }}</div>
+    {% endfor %}
+
+    <h1>Beitrag überprüfen</h1>
+
+    <div class="ui grid">
+
+        <div class="twelve wide column">
+
+            <p><b>Titel des Beitrages: </b>{{ post.title }}</p>
+            <p><b>Slug (Adresse): </b>https://blog.gymnasium-oesede.de/{{ post.slug }}</p>
+
+            {% if post.options.resubmitted is defined and post.options.resubmitted %}
+                <div class="ui fluid card">
+                    <div class="content"><div class="ui yellow label">Nachricht vom Benutzer (Beschriebene Änderungen)</div></div>
+                    <div class="content">{{ post.options.message }}</div>
+                </div>
+            {% endif %}
+            <div class="ui fluid card">
+                <div class="content">
+                    <p><b>Inhalt des Beitrages</b></p>
+                </div>
+
+                <div class="content">
+                    {{ post.content | raw }}
+                </div>
+            </div>
+
+            <div class="ui fluid card">
+                <div class="content">Beitragsbild</div>
+                <div class="content">
+                    <img width="100%" src="/images/post_thumpnail/{{ post.id }}">
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="four wide column">
+
+            {% if post.options.resubmitted is defined and post.options.resubmitted %}
+                <div class="ui yellow card">
+                    <div class="content"><div class="ui yellow label">Erneute Einreichung</div></div>
+                    <div class="content">Dieser Beitrag wurde vom Benutzer überarbeitet und erneut eingereicht.</div>
+                </div>
+            {% endif %}
+
+            <div class="ui card">
+                <div class="content">
+                    <p class="heading">Autor</p>
+                </div>
+                <div class="content">
+                    <b>Benutername: </b> {{ post.owner.username }} <br />
+                    <b>Angezeigter Name: </b> {{ post.owner.displayName }} <br />
+                    <b>E-Mailadresse: </b> {{ post.owner.email }} <br /> <br />
+                    <a class="ui button primary fluid" href="mailto:{{ post.owner.email }}">Kontakt</a>
+                </div>
+            </div>
+
+            <div class="ui card">
+                <div class="content"><p class="heading">Aktionen</p> </div>
+                <div class="content">
+                    <a href="/dashboard/moderation/posts/approve/{{ post.id }}" class="ui positive button fluid"><i class="fas fa-check"></i> Freischalten</a> <br />
+                    <button onclick="$('.ui.modal').modal('show');" class="ui negative button fluid"><i class="fas fa-lock"></i> Sperren</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+{% endblock %}

@@ -1,0 +1,97 @@
+{% extends 'db.template.html.twig' %}
+
+{% block content %}
+
+    {% for post in published_posts %}
+        <div class="ui modal" id="post_delete_{{ post.id }}">
+            <div class="header">
+                Beitrag von der Homepage entfernen
+            </div>
+            <div class="content">
+                <div class="description">
+                    <p>Als Moderator haben Sie ebenfalls die Möglichkeit einen Beitrag von der Homepage wieder zu entfernen, selbst wenn dieser bereits veröffentlicht wurde - dem Benuter wird der Beitrag dann als Abgelehnt angezeigt, bitte spezifieren Sie einen Grund um den Beitrag wieder zu löschen. </p>
+
+                    <form class="ui form" method="post" action="{{ path('postDeny', {'id': post.id}) }}">
+
+                        <div class="field">
+                            <textarea name="reason" placeholder="Grund für die Entfernung"></textarea>
+                        </div>
+
+                        <div class="field">
+                            <button class="ui button negative fluid"><i class="fas fa-lock"></i> Entfernen</button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+            <div class="actions">
+                <button class="ui secondary button deny" onclick="$('#post_delete_{{ post.id }}').modal('hide');">
+                    Abbrechen
+                </button>
+            </div>
+        </div>
+    {% endfor %}
+
+    <h1>Moderation - Beiträge</h1>
+
+    {% for message in app.flashes('status') %}
+        <div class="ui primary message">{{ message }}</div>
+    {% endfor %}
+
+    <h2>Warteschlange</h2>
+    <p>Folgende Artikel bzw. Änderungen an einem Artikel benötigen eine Freischaltung, bitte prüfen Sie dabei auch ob die mit dem Artikel verbundenen Medien den Anforderungen an die Regeln des Internetangebotes des Gymnasiums Oesede erfüllen. </p>
+
+    <table class="ui table">
+
+        <thead>
+        <tr>
+            <th>Titel</th>
+            <th>Typ</th>
+            <th>Besitzer</th>
+            <th>Aktionen</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for post in posts %}
+            <tr>
+                <td>{{ post.title }}</td>
+                <td>Beitrag</td>
+                <td>{{ post.owner.displayName }}</td>
+                <td><a href="/dashboard/moderation/posts/check/{{ post.id }}" class="ui primary button">Überprüfen</a><a class="ui secondary button" href="mailto:{{ post.owner.email }}">Autor kontaktieren</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+
+    </table>
+
+    <h2>Öffentliche Beitrage</h2>
+    <p>Alle diese Beiträge sind bereits online und können bearbeitet oder gelöscht werden.</p>
+
+    <table class="ui table">
+
+        <thead>
+        <tr>
+            <th>Titel</th>
+            <th>Typ</th>
+            <th>Besitzer</th>
+            <th>Aktionen</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for post in published_posts %}
+            <tr>
+                <td>{{ post.title }}</td>
+                <td>Beitrag</td>
+                <td>{{ post.owner.displayName }}</td>
+                <td><button onclick="$('#post_delete_{{ post.id }}').modal('show')" class="ui negative button">Löschen</button><a class="ui secondary button" href="/dashboard/posts/edit/{{ post.id }}">Bearbeiten</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+
+    </table>
+
+
+{% endblock %}

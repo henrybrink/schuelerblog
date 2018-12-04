@@ -1,0 +1,35 @@
+{% extends 'db.template.html.twig' %}
+
+{% block content %}
+
+<div class="ui grid">
+
+    <div class="twelve wide column">
+
+        <h1>Benutzer erstellen</h1>
+
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
+
+    </div>
+
+    <div class="four wide column">
+
+        <div class="ui card">
+            <div class="content">Rollen</div>
+            <div class="content">
+                Folgende Rollen sind verfügbar: <br />
+                <b>Administrator</b> - Dieser Benutzer hat Zugriff auf alle Einstellungen <br />
+                <b>Moderator</b> - Dieser Benutzer kann Beiträge erstellen und veröffentlichen <br />
+                <b>Redakteur</b> - Dieser Benutzer kann Beiträge erstellen, diese müssen jedoch erst von einem Admin / Mod abgenickt werden. <br />
+                <b>Gast</b> - (Verfügbar in Zukunft)
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+
+{% endblock %}

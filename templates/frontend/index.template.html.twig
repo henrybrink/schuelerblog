@@ -1,0 +1,50 @@
+{% include('frontend/header.html.twig') %}
+
+    <div class="startseite-eyecatcher">
+
+        <div class="eyecatcher-border"></div>
+        <div class="eyecatcher-overlay">
+
+            <div class="gymoe-txtcontainer">
+                <div><span id="txtcont-hd">Gymnasium Oesede</span>
+                    <span id="txt-50">Schülerblog</span></div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="textcontainer" id="textcontainer-startseite">
+
+
+        <h1>Schülerblog - Gymnasium Oesede</h1>
+        <p>Herzlich Willkommen auf dem Schülerblog des Gymnasiums Oesede - ein Projekt von Schülern und Lehrern - für alle Schülerrinnen und Schüler. // TODO: Beschreibung</p>
+
+        <div class="posts-container">
+
+            {% for post in posts %}
+                <div class="post">
+
+                    <div class="post-image">
+                        <div class="image-container" data-href="/posts/{{ post.slug }}">
+                            <img src="/images/post_thumpnail/{{ post.id }}" alt="Beitragsbild">
+                            <div class="post-overlay">
+                                <i class="fas fa-clock"></i> - {{ post.date | date('d.m.Y') }} <i style="margin-left: 15px;" class="fas fa-user"></i> {{ post.owner.username }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="post-meta">
+                        <span class="heading" data-href="/posts/{{ post.slug }}">{{ post.title }}</span>
+                        <div class="text">{{ post.description }}</div>
+                        <a class="button post" href="/posts/{{ post.slug }}">Weiterlesen</a>
+                    </div>
+
+                </div>
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+{% include('frontend/footer.html.twig') %}

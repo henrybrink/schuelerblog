@@ -1,0 +1,28 @@
+<div class="footer">
+
+    <div class="footer-content">
+        <div class="footer-grid" id="grid1">
+            <span class="grid-heading">Schülerblog - Gymnasium Oesede</span>
+            <ul class="footer-links">
+                <li><a href="/login">Anmelden</a></li>
+                {% if is_granted("ROLE_EDITOR") %}
+                    <li><a href="/dashboard">Dashboard</a></li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <div class="footer-grid" id="grid1">
+            <span class="grid-heading">Infomation</span>
+            <p>Der Schülerblog des Gymnasiums Oesede ist Teil des Internetangebotes am Gymnasium Oesede, der Blog wird von einer Redaktion bestehend aus Schülern und Lehrern betrieben, weitere Details finden Sie unter "Team"</p>
+        </div>
+    </div>
+
+    <div class="footer-menu">
+        <span>2018 - Gymnasium Oesede <a href="https://gymnasium-oesede.de/impressum">Impressum & Datenschutz</a></span>
+    </div>
+
+</div>
+
+</body>
+
+</html>

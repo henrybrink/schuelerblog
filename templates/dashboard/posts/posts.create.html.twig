@@ -1,0 +1,31 @@
+{% extends 'db.template.html.twig' %}
+
+{% block content %}
+
+    {% for message in app.flashes('success') %}
+        <div class="ui positive message">{{ message }}</div>
+    {% endfor %}
+
+    {% if update is defined and update %}
+        <div class="ui yellow message">Achtung: Du bearbeitest einen abgelehnten Post, dieser wird nach deiner Bearbeitung einem Moderator erneut vorgelegt, bitte beachte das du das Beitragsbild nicht bearbeiten kannst, angehangene Medien bleiben bestehen.</div>
+    {% endif %}
+
+    <h1>Neuer Beitrag</h1>
+
+    <div class="ui primary message">
+        {% if current is defined and current == "home" %}
+            Bevor du den Inhalt des Artikels erstellen kannst, musst du zunächst einen Titel, eine URL und eine kurze Beschreibung für die Startseite festlegen, dann kannst du nach einem Klick auf "Weiter" den Inhalt und das Beitragsbild hinzufügen.
+        {% else %}
+            Füge bitte nun den Inhalt und das Beitragsbild hinzu, solltest du damit fertig sein, kannst deinen Bericht speichern. Ein Moderator / Admin wird diesen auf Fehler überprüfen und freischalten.
+        {% endif %}
+    </div>
+
+    <p>Du kannst auf dieser Seite einen Beitrag erstellen, dieser wird dann einem Redakteur zur Kontrolle vorgelegt.</p>
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
+
+    <span style="display: none" id="postID" data-id="{{ post.id }}"></span>
+
+{% endblock %}

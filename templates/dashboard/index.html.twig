@@ -1,0 +1,87 @@
+{% include('db.header.html.twig') %}
+
+    <div class="ui container">
+
+        <div class="ui grid">
+            <div class="twelve wide column">
+
+                <h1>Dashboard</h1>
+
+                <p>Herzlich Willkommen im Dashboard des Schülerblogs des Gymnasiums Oesede</p>
+
+                {% if denied_size > 0 %}
+
+                    <h2>Abgelehnte Beiträge</h2>
+                    <p>Oh nein - es scheint als wären Beiträge von dir abgelehnt worden, bitte überprüfe die Ablehnungen und reiche deinen Beitrag erneut ein, bzw. lösche ihn damit diese Meldung verschwindet.</p>
+
+                    {% for denied in denied_posts %}
+                        <div class="ui fluid card">
+                            <div class="content"><div class="ui red label">Abgelehnt</div> - {{ denied.title }}</div>
+                            <div class="content">{{ denied.options.reason }}</div>
+                        </div>
+                    {% endfor %}
+
+                {% endif %}
+
+                {% if mod_posts is defined and mod_posts | length > 0 %}
+
+                    <h2>Warteschlange</h2>
+                    <p>Aktuell befinden sich Artikel in der Warteschlange, bitte überprüfen Sie diese Zeitnah! Die Posts sind nach dem ältestem zuerst sortiert, das Datum auf der Homepage entspricht immer dem Datum der Freischaltung, achten Sie deshalb bitte auf die korrekte Reihenfolge</p>
+
+                    <table class="ui table">
+
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Autor</th>
+                                <th>Datum</th>
+                                <th>Aktion</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                        {% for post in mod_posts %}
+                            <tr>
+                                <td>{{ post.title }}</td>
+                                <td>{{ post.owner.displayName }}</td>
+                                <td>{{ post.date | date('d.m.Y') }}</td>
+                                <td>
+                                    <a class="ui primary button" href="{{ path('checkPost', {'id': post.id}) }}">Überprüfen</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+
+                    </table>
+
+                {% endif %}
+
+            </div>
+
+            <div class="four wide column">
+
+                {% if is_granted('ROLE_ADMIN') %}
+
+                    {% if debug_mode is defined and debug_mode %}
+                        <div class="ui negative card">
+                            <div class="content">Konfiguration fehlerhaft</div>
+                            <div class="content">Achtung: Die Applikation läuft aktuell im Entwicklungsmodus, die Anwendung solle so nicht auf einem Server im Internet hochgeladen werden.</div>
+                        </div>
+                    {% endif %}
+
+                {% endif %}
+
+                <div class="ui card">
+                    <div class="content"><span class="heading">Kurzlinks</span></div>
+
+                    <div class="content">
+                        <a href="/dashboard/user/settings" class="ui primary button">Einstellungen</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+{% include('db.footer.html.twig') %}

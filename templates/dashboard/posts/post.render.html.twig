@@ -1,0 +1,11 @@
+{% include('db.header.html.twig') %}
+
+    <div class="ui container">
+
+        {{ post.content | raw }}
+
+        <p class="author-box">Von: {{ post.owner.username }}</p>
+
+    </div>
+
+{% include('db.footer.html.twig') %}

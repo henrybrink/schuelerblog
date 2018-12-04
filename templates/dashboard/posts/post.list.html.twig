@@ -1,0 +1,36 @@
+{% extends 'db.template.html.twig' %}
+
+{% block content %}
+
+    <h1>Deine Beiträge</h1>
+
+    <table class="ui table">
+
+        <thead>
+        <tr>
+            <th>Titel</th>
+            <th>Datum</th>
+            <th>Status</th>
+            <th>Aktionen</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for post in posts %}
+            <tr>
+                <td>{{ post.title }}</td>
+                <td>{{ post.date | date('d.m.Y') }}</td>
+                <td>{% if post.published %} <div class="ui green label">Öffentlich</div> {% elseif post.denied is defined and post.denied %}<div class="ui red label">Abgelehnt</div> {% else %} <div class="ui yellow label">Warteschlange</div> {% endif %}</td>
+                <td>
+                    {% if post.denied is defined and post.denied %}
+                        <a class="ui positive button" href="{{ path('updateContent', {'id': post.id}) }}">Änderungen vorschlagen</a>
+                    {% endif %}
+                    <a class="ui negative button" href="{{ path('postDelete', {'id': post.id}) }}">Löschen</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+
+    </table>
+
+{% endblock %}

@@ -1,0 +1,630 @@
+/*
+
+    Gymnasium Oesede | 50 Jahre
+
+*/
+
+@import url('https://fonts.googleapis.com/css?family=Raleway:700|Source+Sans+Pro');
+
+body {
+    margin: 0;
+}
+
+.menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    background-color: #1b1b1f;
+    z-index: 100
+}
+
+.menu > .menu-branding {
+    margin-left: 16px;
+    margin-top: 14px;
+}
+
+.hamburger-button {
+    position: fixed;
+    top: 0;
+    right: 10px;;
+    height: 70px;
+    width: 70px;
+    transform: scale(-0.7);
+}
+
+.hamburger-btn {
+    height: 9px;
+    width: 60px;
+    background-color: white;
+    position: absolute;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+#ham-btn-1 {
+    margin-top: 10px;
+}
+
+#ham-btn-2 {
+    margin-top: 30px;
+}
+
+#ham-btn-3 {
+    margin-top: 50px;
+}
+
+.startseite-eyecatcher {
+    margin-top: 70px;
+    height: 500px;
+    background-image: url("../img/hintergrund.png");
+    background-position: center center;
+    background-repeat: no-repeat;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    position: relative;
+}
+
+.eyecatcher-text-container {
+    width: 450px;
+    height: 250px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 10px;
+    border: 3px solid #a02828;
+    margin-right: 15px;
+    margin-bottom: 15px;
+    display: none;
+}
+
+.eyecatcher-text-container > h1 {
+    color: #a02828;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 20px;
+    padding: 10px;
+}
+
+.eyecatcher-text-container > p {
+    padding: 10px;
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+.eyecatcher-border {
+    height: 200px;
+    width: 100%;
+    background-color: white;
+    transform: skewY(-4deg);
+    margin-bottom: 100px;
+    z-index: 3;
+    position: absolute;
+    bottom: -200px;
+    -webkit-box-shadow: 0px -10px 14px 2px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px -10px 14px 2px rgba(0,0,0,0.75);
+    box-shadow: 0px -10px 14px 2px rgba(0,0,0,0.75);
+}
+
+.textcontainer {
+    width: 95%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+}
+
+h1 {
+    font-family: 'Raleway';
+    font-size: 40px;
+    display: block;
+}
+
+.eyecatcher-overlay {
+    height: 920px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    margin-left: 0;
+    display: block;
+    margin-top: -60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+p {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 18px;
+}
+
+.gymoe-txtcontainer {
+    padding: 10px;
+    background-color: white;
+    border: 4px solid #a02828;
+    font-family: 'Raleway';
+    border-top-right-radius: 50px;
+    border-bottom-left-radius: 40px;
+    min-height: 170px;
+    margin-top: -400px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#txtcont-hd {
+    font-size: 40px;
+    display: block;
+    color: #a02828;
+}
+
+#txt-50 {
+    font-size: 50px;
+    text-align: center;
+    display: block;
+}
+
+.sidemenu {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 320px;
+    height: 100%;
+    background-color: #1b1b1f;
+    z-index: 100;
+    padding: 10px;
+    display: none;
+}
+
+.closebutton {
+    right: 10px;
+    top: 10px;
+    height: 70px;
+    width: 70px;
+    transform: scale(0.7);
+    cursor: pointer;
+    position: absolute;
+}
+
+.closebtn {
+    height: 10px;
+    width: 70px;
+    background-color: white;
+    position: absolute;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+#closebtn1 {
+    transform: rotate(45deg);
+}
+
+#closebtn2 {
+    transform: rotate(135deg);
+}
+
+.ul-sidemenu {
+    font-size: 20px;
+    list-style: none;
+    margin-left: -10px;
+    margin-top: 60px;
+}
+
+.menu-link {
+    padding: 10px;
+    margin-left: -10px;
+}
+
+.menu-link > a {
+    color: white;
+    text-decoration: none;
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+@media screen and (max-width: 900px) {
+
+    .sidemenu {
+        width: 100%;
+        left: 0;
+        top: 0;
+    }
+
+    .closebtn {
+        right: 20px;
+    }
+
+    .footer-content {
+        width: 95%;
+        margin-left: auto;
+        margin-right: auto;
+        position: relative;
+        flex-wrap: wrap;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+        min-height: 500px;
+    }
+
+    .footer-grid {
+        min-width: 95%;
+    }
+
+    h1 {
+        font-size: 30px;
+    }
+
+    .list-item {
+        width: 90%;
+    }
+
+    .list-item > img {
+        width: 90%;
+    }
+
+
+
+}
+
+.footer {
+    width: 100%;
+    left: 0;
+    position: absolute;
+    background-color: #1b1b1f;
+    color: white;
+    font-family: 'Source Sans Pro', sans-serif;
+    margin-bottom: 0;
+}
+
+.footer-grid {
+    min-width: 25%;
+    max-width: 40%;
+    height: 200px;
+    padding: 10px;
+    margin-left: 20px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    flex: 1;
+    justify-content: space-around;
+    align-items: stretch;
+}
+
+.footer a {
+    color: white;
+    color: gray;
+    text-decoration: none;
+}
+
+.footer li {
+    margin-left: -40px;
+}
+
+.footer ul {
+    list-style: none;
+}
+
+.grid-heading {
+    color: lightgray;
+    font-family: 'Raleway', sans-serif;
+    font-size: 18px;
+}
+
+.footer-menu {
+    height: 60px;
+    background-color: #0e0e0f;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer-menu > span {
+    padding: 10px;
+    display: block;
+    color: lightgray;
+}
+
+h2 {
+    font-size: 29px;
+    font-family: 'Raleway', sans-serif;
+}
+
+.image-container {
+    margin-bottom: 20px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    height: auto;
+    vertical-align: middle;
+}
+
+.image-container > img {
+    width: 100%;
+    vertical-align: inherit;
+}
+
+.image-container > .description {
+    padding: 10px;
+    background-color: rgba(0,0,0,0.6);
+    color: white;
+    font-family: 'Source Sans Pro', sans-serif;
+    margin-bottom: -10px;
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    display: block;
+    box-sizing: border-box;
+}
+
+.image-container:hover img {
+    transition: 1s;
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+.site-eyecatcher {
+    margin-top: 70px;
+    background-color: #a02828;
+    color: white;
+    text-align: center;
+    height: 140px;
+    padding: 10px;
+    overflow: hidden;
+}
+
+
+.site-eyecatcher-overlay {
+    height: 160px;
+    background-color: white;
+    transform: skewY(-1.6deg);
+    margin-top: 10px;
+    margin-right: -10px;
+    margin-left: -10px;
+}
+
+.site-eyecatcher > h1 {
+    padding: 10px;
+}
+
+.list-item {
+    width: 400px;
+    -webkit-box-shadow: 0px 0px 14px 2px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 14px 2px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 14px 2px rgba(0,0,0,0.75);
+    border-radius: 10px;
+    margin-right: 40px;
+    margin-bottom: 40px;
+}
+
+.list-item > img {
+    width: 400px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.list-text {
+    padding: 10px;
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+.list-title {
+    font-family: 'Raleway', sans-serif;
+    font-size: 30px;
+    display: block;
+}
+
+.list-desc {
+    margin-bottom: 11px;
+    display: block;
+}
+
+.button {
+    padding: 10px;
+    width: 100%;
+    background-color: #a02828;
+    color: white;
+    font-size: 20px;
+    font-family: 'Raleway', sans-serif;
+    border: 0;
+    border-radius: 3px;
+    cursor: pointer;
+    text-decoration: none;
+    margin-bottom: 20px;
+    display: block;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+.eingabe {
+    padding: 10px;
+    width: 100%;
+    border: 2px solid #a02828;
+    border-radius: 4px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+span[title] {
+    text-decoration: underline;
+    text-decoration-style: dashed;
+}
+
+#loginform {
+    height: 440px;
+}
+
+.table-container > table {
+    width: 100%;
+    font-family: 'Source Sans Pro', sans-serif;
+    border-collapse: collapse;
+}
+
+.table-container > table > thead {
+    font-family: 'Raleway', sans-serif;
+    font-size: 18px;
+}
+
+.table-container > table > tbody {
+    text-align: center;
+    table-layout: auto;
+
+}
+
+.table-container > table > tbody > tr {
+    padding: 15px;
+    height: 50px;
+    border-bottom: 2px solid lightgray;
+}
+
+.table-container {
+    overflow-x: scroll;
+    width: 100%;
+}
+
+h3 {
+    font-family: 'Raleway', sans-serif;
+}
+
+.error {
+    padding: 10px;
+    background-color: #a02828;
+    color: white;
+    display: block;
+    margin-bottom: 20px;
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+.error-hd {
+    font-size: 18px;
+    font-family: 'Raleway', sans-serif;
+    display: block;
+}
+
+.small-button {
+    padding: 10px;
+    background-color: #a02828;
+    color: white;
+    font-size: 15px;
+    font-family: 'Raleway', sans-serif;
+    border: 0;
+    border-radius: 3px;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    box-sizing: border-box;
+    margin-right: 10px;
+}
+
+@media print {
+
+    .menu {
+        position: absolute;
+    }
+
+}
+
+.post-overlay {
+    position: absolute;
+    background-color: #a02828;
+    bottom: 0;
+    right: 0;
+    padding: 15px;
+    font-size: 25px;
+    font-weight: bold;
+    font-family: 'Raleway', sans-serif;
+    color: white;
+}
+
+.post-image > .image-container {
+    max-height: 600px;
+    max-width: 500px;
+}
+
+.posts-container {
+    position: relative;
+    display: flex;
+    flex-flow: column;
+}
+
+.post-image {
+    float: left;
+}
+
+.post-meta > .heading {
+    font-weight: bold;
+    font-family: 'Raleway';
+    font-size: 20px;
+}
+
+.post-meta {
+    margin-left: 20px;
+    width: 50%;
+    float: left;
+    height: 280px;
+    position: relative;
+}
+
+.post-meta > .heading:hover {
+    transition: 1s;
+    color: #a02828;
+    cursor: pointer;
+}
+
+.post-meta > .text {
+    margin-top: 10px;
+    font-size: 18px;
+    font-family: 'Fira Sans', sans-serif;
+}
+
+.post.button {
+    margin-bottom: 0px;
+    position: absolute;
+    bottom: 0;
+}
+
+@media screen and (max-width: 1200px) {
+
+    .post-meta {
+        float: none;
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .post-image {
+        float: none;
+        width: 100%;
+    }
+
+    .post {
+        margin-bottom: 20px;
+    }
+
+    .post.button {
+        bottom: 20px;
+    }
+
+    .post-image > .image-container {
+        max-height: available;
+        max-width: 100%;
+    }
+
+}
+
+.img-responsive {
+    width: 100%;
+}

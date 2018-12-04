@@ -1,0 +1,19 @@
+{% extends('frontend/frontend.base.html.twig') %}
+
+{% block site_title %}
+    Fehler 404
+{% endblock %}
+
+{% block content %}
+
+    <h1>Ähm... Nein!</h1>
+    <p>Die von dir aufgerufene URL konnte leider nicht gefunden werden, dies kann mehrere Ursachen haben:</p>
+
+    <ul>
+        <li>Du hast einen Link geöffnet der auf eine Seite verweiset die nicht (mehr) verfügbar ist.</li>
+        <li>Du hast dich beim Aufruf der Seite vertippt</li>
+        <li>Wir, bzw. unser Webmaster, haben bzw. hat einen Fehler gemacht.</li>
+    </ul>
+
+    <a class="button" href="/">Zurück zur Startseite</a>
+{% endblock %}
