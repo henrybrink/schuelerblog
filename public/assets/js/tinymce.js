@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
     tinymce.init({
-        selector: 'textarea',
+        selector: 'textarea.tinymce',
         height: 500,
         theme: 'modern',
         plugins: 'print preview fullpage searchreplace autolink directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists textcolor wordcount imagetools contextmenu colorpicker textpattern help',
@@ -15,10 +15,16 @@ $(document).ready(function() {
             {title: 'Responsive', value: 'img-responsive'}
         ],
         language: 'de',images_upload_handler: function (blobInfo, success, failure) {
-            var xhr, formData;
+            let xhr, formData;
+
+            let url = '/dashboard/media/upload/post/';
+
+            if('#postType'.data('type') === 'page') {
+                url = '/dashboard/admin/media/upload/';
+            }
 
             xhr = new XMLHttpRequest();
-            xhr.open('POST', '/dashboard/media/upload/');
+            xhr.open('POST', url);
 
             xhr.onload = function() {
                 var json;
@@ -41,6 +47,7 @@ $(document).ready(function() {
             formData = new FormData();
             formData.append('file', blobInfo.blob(), blobInfo.filename());
             formData.append('linkedPost', $('#postID').data('id'));
+            formData.append('type', $('#postType').data('type'));
 
             xhr.send(formData);
         }

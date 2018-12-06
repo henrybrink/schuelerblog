@@ -1,0 +1,11 @@
+{% extends 'frontend/frontend.base.html.twig' %}
+
+{% block title %}{{ page.title }} - Schülerblog Gymnasium Oesede{% endblock %}
+
+{% block site_title %}{{ page.title }}{% endblock %}
+
+{% block content %}
+        {% autoescape %}
+            <p>{{ page.content | raw }}</p>
+        {% endautoescape %}
+{% endblock %}

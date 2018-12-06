@@ -8,6 +8,7 @@
 
 body {
     margin: 0;
+    font-family: 'Fira Sans', sans-serif;
 }
 
 .menu {
@@ -109,6 +110,7 @@ body {
     margin-left: auto;
     margin-right: auto;
     position: relative;
+    min-height: 500px;
 }
 
 h1 {
@@ -538,93 +540,72 @@ h3 {
 
 }
 
-.post-overlay {
-    position: absolute;
-    background-color: #a02828;
-    bottom: 0;
-    right: 0;
-    padding: 15px;
-    font-size: 25px;
-    font-weight: bold;
-    font-family: 'Raleway', sans-serif;
-    color: white;
-}
-
-.post-image > .image-container {
-    max-height: 600px;
-    max-width: 500px;
+.img-responsive {
+    width: 100%;
 }
 
 .posts-container {
-    position: relative;
     display: flex;
-    flex-flow: column;
+    max-width: 100%;
+    position: relative;
+    flex-flow: wrap;
+    flex-grow: 2;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+.post {
+    width: 48%;
 }
 
 .post-image {
-    float: left;
-}
-
-.post-meta > .heading {
-    font-weight: bold;
-    font-family: 'Raleway';
-    font-size: 20px;
-}
-
-.post-meta {
-    margin-left: 20px;
-    width: 50%;
-    float: left;
-    height: 280px;
     position: relative;
 }
 
-.post-meta > .heading:hover {
-    transition: 1s;
-    color: #a02828;
-    cursor: pointer;
+.post-overlay {
+    position: absolute;
+    z-index: 100;
+}
+
+.button.post {
+    width: 100%;
+}
+
+.post {
+    position: relative;
+}
+
+.post-meta {
+    margin-top: 10px;
+}
+
+.post-meta > .heading {
+    font-family: 'Raleway', sans-serif;
+    font-size: 20px;
+    display: block;
+    margin-bottom: 10px;
 }
 
 .post-meta > .text {
-    margin-top: 10px;
-    font-size: 18px;
     font-family: 'Fira Sans', sans-serif;
+    margin-bottom: 10px;
 }
 
-.post.button {
-    margin-bottom: 0px;
+.post-overlay {
     position: absolute;
     bottom: 0;
+    width: 100%;
+    background-color: lightgray;
+    padding: 15px;
+    text-align: center;
+    font-family: 'Raleway', sans-serif;
 }
 
-@media screen and (max-width: 1200px) {
 
-    .post-meta {
-        float: none;
-        margin-left: 0;
-        width: 100%;
-    }
-
-    .post-image {
-        float: none;
-        width: 100%;
-    }
+@media screen and (max-width: 1000px) {
 
     .post {
-        margin-bottom: 20px;
+        width: 100%;
     }
 
-    .post.button {
-        bottom: 20px;
-    }
-
-    .post-image > .image-container {
-        max-height: available;
-        max-width: 100%;
-    }
-
-}
-
-.img-responsive {
-    width: 100%;
 }

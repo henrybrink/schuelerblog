@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\AttachedImage;
 use App\Entity\Post;
+use App\Repository\PageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -15,7 +16,7 @@ class FrontendController extends AbstractController
      * @Route("/", name="frontend")
      */
     public function index() {
-        $posts = $this->getDoctrine()->getRepository(Post::class)->findBy(array('published' => true), ['date' => 'DESC']);
+        $posts = $this->getDoctrine()->getRepository(Post::class)->findBy(array('published' => true, 'denied' => false, 'type' => 'POST'), ['date' => 'DESC']);
         return $this->render('frontend/index.template.html.twig', ['posts' => $posts]);
     }
 
@@ -60,7 +61,7 @@ class FrontendController extends AbstractController
         /** @var AttachedImage $post */
         $post = $this->getDoctrine()->getRepository(AttachedImage::class)->find($id);
 
-        if(!$post || (!$post->getLinkedPost()->getPublished() && !$this->isGranted("IS_AUTHENTICATED_FULLY"))) {
+        if(!$post || (!$post->hasPage() && !$post->getLinkedPost()->getPublished() && !$this->isGranted("IS_AUTHENTICATED_FULLY"))) {
             throw $this->createNotFoundException("Attachment not found.");
         }
 
@@ -76,6 +77,15 @@ class FrontendController extends AbstractController
     /**
      * @Route("/page/{page}", name="showPage")
      */
-    public function pageShow($page) {
+    public function pageShow($page, PageRepository $pageRepository) {
+        $page = $pageRepository->findOneBy(['slug' => $page]);
+
+        if(!$page) {
+            throw $this->createNotFoundException("Page wasn't found.");
+        }
+
+        return $this->render('frontend/page.view.html.twig', [
+            'page' => $page
+        ]);
     }
 }

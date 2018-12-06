@@ -1,0 +1,42 @@
+{% extends 'db.template.html.twig' %}
+
+{% block title %}Seite hinzufügen - Schülerblog Gymnasium Oesede{% endblock %}
+
+{% block content %}
+
+    <div class="ui grid">
+
+        <div class="twelve wide column">
+
+            <h1>Seite hinzufügen</h1>
+
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            {{ form_end(form) }}
+
+            <input type="hidden" id="postID" data-id="dummy">
+            <input type="hidden" id="postType" data-type="page">
+
+        </div>
+
+        <div class="four wide column">
+
+            <div class="ui red card">
+                <div class="content"><div class="ui red label">Wichtig</div></div>
+                <div class="content">
+                    Es ist leider aktuell noch nicht möglich Bilder beim Erstellen einer Seite einzufügen, sondern erst nach der Veröffentlichung dieser!
+                </div>
+            </div>
+
+            <div class="ui card">
+                <div class="content"><span class="header">Hinweise zu Seiten:</span></div>
+                <div class="content">
+                    <p>Eine Seite ist immer mit /page/{seitentitel} erreichbar, im Unterschied zu Beiträgen können Seiten nur von Administratoren angelegt werden, Thumpnails oder Post-Meta-Informationen existieren für Seite nicht.</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}

@@ -11,7 +11,9 @@
         <img src="{{ path('loadPostImage', {'post': post.id}) }}" ">
     </div>
 
+    {% autoescape %}
     <p>{{ post.content | raw }}</p>
+    {% endautoescape %}
 
 </div>
 

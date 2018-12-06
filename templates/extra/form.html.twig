@@ -184,3 +184,9 @@
         </div>
     {%- endif %}
 {%- endblock form_errors %}
+
+{# CUSTOM FORM TYPES #}
+
+{% block tinymce_widget %}
+    <textarea {{ block('widget_attributes') }} class="tinymce" rows="20">{% if value is not empty %}{{ value }}{% endif %}</textarea>
+{% endblock %}

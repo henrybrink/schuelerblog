@@ -34,9 +34,20 @@ class AttachedImage
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Post", inversedBy="attachedImages")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $linkedPost;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Page", inversedBy="attachedImages")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $linkedPage;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isIndependent;
 
     public function getId(): ?int
     {
@@ -87,6 +98,36 @@ class AttachedImage
     public function setLinkedPost(?Post $linkedPost): self
     {
         $this->linkedPost = $linkedPost;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLinkedPage() {
+        return $this->linkedPage;
+    }
+
+    /**
+     * @param mixed $linkedPage
+     */
+    public function setLinkedPage($linkedPage): void {
+        $this->linkedPage = $linkedPage;
+    }
+
+    public function hasPage() {
+        return ($this->linkedPage == null);
+    }
+
+    public function isIndependent(): ?bool
+    {
+        return $this->isIndependent;
+    }
+
+    public function setIsIndependent(?bool $isIndependent): self
+    {
+        $this->isIndependent = $isIndependent;
 
         return $this;
     }

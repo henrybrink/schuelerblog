@@ -3,11 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\AttachedImage;
+use App\Entity\Page;
 use App\Entity\Post;
 use App\Entity\User;
 use App\Form\TinymceType;
 use App\Repository\PostRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -56,14 +58,31 @@ class DashboardController extends AbstractController
     public function addPost(Request $request) {
 
         $post = new Post();
+        $post->setType("POST");
         $post->setOwner($this->getUser());
 
-        $form = $this->createFormBuilder($post)
-            ->add('title', TextType::class, array('label' => "Titel deines Beitrages"))
-            ->add('slug', TextType::class, array('label' => "URL (kleinbuchstaben, keine Sonderzeichen ausgenommen -, keine umlaute!)"))
-            ->add('description', TextareaType::class, array('label' => "Kurze Beschreibung deines Artikels (feed)"))
-            ->add('submit', SubmitType::class, array('label' => 'Weiter'))
-            ->getForm();
+        if($this->isGranted("ROLE_ADMIN")) {
+            $form = $this->createFormBuilder($post)
+                ->add('title', TextType::class, array('label' => "Titel deines Beitrages"))
+                ->add('slug', TextType::class, array('label' => "URL (kleinbuchstaben, keine Sonderzeichen ausgenommen -, keine umlaute!)"))
+                ->add('description', TextareaType::class, array('label' => "Kurze Beschreibung deines Artikels (feed)"))
+                ->add('type', ChoiceType::class, array(
+                    'choices' => [
+                        'Beitrag' => "POST",
+                        'Seite' => "PAGE",
+                        'Geschützter Beitrag' => 'PROTECTED_POST'
+                    ]
+                ))
+                ->add('submit', SubmitType::class, array('label' => 'Weiter'))
+                ->getForm();
+        } else {
+            $form = $this->createFormBuilder($post)
+                ->add('title', TextType::class, array('label' => "Titel deines Beitrages"))
+                ->add('slug', TextType::class, array('label' => "URL (kleinbuchstaben, keine Sonderzeichen ausgenommen -, keine umlaute!)"))
+                ->add('description', TextareaType::class, array('label' => "Kurze Beschreibung deines Artikels (feed)"))
+                ->add('submit', SubmitType::class, array('label' => 'Weiter'))
+                ->getForm();
+        }
 
         if($form->handleRequest($request) && $form->isSubmitted() && $form->isValid()) {
 
@@ -74,6 +93,11 @@ class DashboardController extends AbstractController
             $post->setDate(new \DateTime());
             $post->setPublished(false);
             $post->setDenied(false);
+
+            if($post->getType() == "PAGE") {
+                $post->setPublished(true);
+                $post->setImage("none");
+            }
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($post);
@@ -193,12 +217,8 @@ class DashboardController extends AbstractController
             throw $this->createNotFoundException("Can't find a route for your request.");
         }
 
-        /** @var Post $post */
-        $post = $this->getDoctrine()->getRepository(Post::class)->find($linkedPost);
-
-        if(!$post || ($post->getOwner()->getId() != $this->getUser()->getId() && !$this->isGranted("ROLE_ADMIN"))) {
-            $this->createAccessDeniedException("You can't upload media to post which don't exists or you aren't the owner of");
-        }
+        /** @var Page $post */
+        $post = $this->getDoctrine()->getRepository(Page::class)->find($linkedPost);
 
         $fileName = md5(uniqid("20") . random_bytes(20)) . $uploadedFile->getClientOriginalExtension();
         $uploadedFile->move("uploads/attachments", $fileName);
@@ -207,7 +227,7 @@ class DashboardController extends AbstractController
         $attachment->setOwner($this->getUser());
         $attachment->setPath($fileName);
         $attachment->setDescription("(disabled)");
-        $attachment->setLinkedPost($post);
+        $attachment->setLinkedPage($post);
 
         $entiyManager = $this->getDoctrine()->getManager();
         $entiyManager->persist($attachment);

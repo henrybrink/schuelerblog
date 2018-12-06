@@ -79,6 +79,11 @@ class Post
      */
     private $denied;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $type;
+
     public function __construct()
     {
         $this->attachedImages = new ArrayCollection();
@@ -248,6 +253,18 @@ class Post
     public function setDenied(?bool $denied): self
     {
         $this->denied = $denied;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(?string $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }

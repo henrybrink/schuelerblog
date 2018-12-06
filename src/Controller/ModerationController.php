@@ -3,8 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Post;
+use App\Form\TinymceType;
 use App\Repository\PostRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,11 +26,11 @@ class ModerationController extends AbstractController {
      * @Route("/posts/", name="listPosts")
      */
     public function viewPosts() {
-        $posts = $this->getDoctrine()->getRepository(Post::class)->findBy(array('published' => false, 'denied' => false));
-        $published = $this->getDoctrine()->getRepository(Post::class)->findBy(array('published' => true));
+        $posts = $this->getDoctrine()->getRepository(Post::class)->findBy(array('published' => false, 'denied' => false, 'type' => 'POST'));
+        $published = $this->getDoctrine()->getRepository(Post::class)->findBy(array('published' => true, 'type' => 'POST'));
+        $pages = $this->getDoctrine()->getRepository(Post::class)->findBy(array('type' => 'PAGE'));
 
-
-        return $this->render('dashboard/mod/mod.posts.html.twig', array("posts" => $posts, 'published_posts' => $published));
+        return $this->render('dashboard/mod/mod.posts.html.twig', array("posts" => $posts, 'published_posts' => $published, 'pages' => $pages));
     }
 
     /**
@@ -95,6 +99,45 @@ class ModerationController extends AbstractController {
 
         return $this->redirectToRoute("checkPost", [
             "id" => $id
+        ]);
+    }
+
+    /**
+     * @Route("/posts/edit/{post}", name="postEdit")
+     */
+    public function editPost($post, PostRepository $posts, Request $request) {
+        $post = $posts->find($post);
+
+        if(!$post) {
+            $this->createAccessDeniedException("Post not found.");
+        }
+
+        $form = $this->createFormBuilder($post)
+            ->add('title', TextType::class, ['label' => "Titel"])
+            ->add('slug', TextType::class, ['label' => "URL"])
+            ->add('description', TextareaType::class, ['label' => 'Beschreibung'])
+            ->add('content', TinymceType::class, ['label' => 'Inhalt'])
+            ->add('submit', SubmitType::class, ['label' => "Aktualisieren"])
+            ->getForm();
+
+        if($form->handleRequest($request) && $form->isSubmitted() && $form->isValid()) {
+            /** @var Post $post */
+            $post = $form->getData();
+
+            $post->setOptions([
+                'edited' => true,
+                'editor' => $this->getUser()->getId()
+            ]);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
+            $this->addFlash('success', 'Der Beitrag / die Seite wurde erfolgreich bearbeitet');
+        }
+
+        return $this->render("dashboard/posts.create.html.twig", [
+            'form' => $form->createView(),
+            'tinymce' => true,
+            'step' => 1
         ]);
     }
 

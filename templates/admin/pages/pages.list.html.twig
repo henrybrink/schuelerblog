@@ -1,0 +1,38 @@
+{% extends 'db.template.html.twig' %}
+
+{% block content %}
+
+    {% for message in app.flashes('success') %}
+        <div class="ui positive message">{{ message }}</div>
+    {% endfor %}
+
+    <h1>Seiten</h1>
+    <p>Neben Blogeinträgen erlaubt es dir das System ebenfalls eine Seite zu erstellen - diese werden nicht auf der Startseite angezeigt und sind mit einem /pages/-Link erreichbar</p>
+
+    <a class="ui primary button" href="{{ path('pageAdd') }}">+ Seite hinzufügen</a>
+
+    <table class="ui table">
+
+        <thead>
+            <tr>
+                <th>Titel</th>
+                <th>Slug</th>
+                <th>Besitzer</th>
+                <th>Aktionen</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for page in pages %}
+                <tr>
+                    <td>{{ page.title }}</td>
+                    <td>{{ page.slug }}</td>
+                    <td>{{ page.owner.displayName }}</td>
+                    <td><a href="{{ path('pageEdit', {'id': page.id}) }}" class="ui primary button">Bearbeiten</a> <a href="{{ path('pageDelete', {'id': page.id}) }}" class="ui negative button">Löschen</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+
+{% endblock %}

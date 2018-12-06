@@ -1,0 +1,35 @@
+{% extends 'db.template.html.twig' %}
+
+{% block title %}Seite hinzufügen - Schülerblog Gymnasium Oesede{% endblock %}
+
+{% block content %}
+
+    <div class="ui grid">
+
+        <div class="twelve wide column">
+
+            <h1>Seite bearbeiten</h1>
+
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            {{ form_end(form) }}
+
+            <input type="hidden" id="postID" data-id="dummy">
+            <input type="hidden" id="postType" data-type="page">
+
+        </div>
+
+        <div class="four wide column">
+
+            <div class="ui red card">
+                <div class="content">Status dieser Seite</div>
+                <div class="content">
+                    Deine Seite ist als <div class="ui green label">Öffentlich</div> makiert, Änderungen sind sofort sichtbar!
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
