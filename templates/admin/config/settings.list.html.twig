@@ -1,0 +1,49 @@
+{% extends('db.template.html.twig') %}
+
+{% block title %} Einstellungen - Schülerblog Gymnasium Oesede{% endblock %}
+
+{% block content %}
+
+    <h1>Einstellungen</h1>
+
+    {% if needsUpdate %}
+        <div class="ui fluid card">
+            <div class="content"><div class="ui red label">Installation unvollständig</div></div>
+            <div class="content">
+                <b>Dein System nicht korrekt installiert</b>
+                <a class="ui positive button" href="/dashboard/admin/config/init">Konfiguration initieren</a>
+            </div>
+        </div>
+    {% endif %}
+
+    <table class="ui table">
+
+        <thead>
+            <tr>
+                <th>Einstellung</th>
+                <th>Beschreibung</th>
+                <th>Aktion</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for setting in settings %}
+                {% if setting.type != 'hidden' %}
+                    <tr>
+                        <td>{{ setting.displayName }}</td>
+                        <td>{{ setting.description }}</td>
+                        <td><a class="ui primary button" href="/dashboard/admin/config/edit/{{ setting.id }}">Bearbeiten</a></td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="ui fluid card">
+        <div class="content">Gefahrenzone</div>
+        <div class="content">
+            <a href="/dashboard/admin/config/reset" class="ui negative button">Einstellungen zurücksetzen</a>
+        </div>
+    </div>
+
+{% endblock %}

@@ -8,11 +8,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Setting {
 
-    public static function create($name, $type, $defaultValue) {
+    public static function create($name, $displayName, $description,  $type, $defaultValue) {
         $setting = new Setting();
         $setting->setName($name);
         $setting->setValue($defaultValue);
         $setting->setDefaultValue($defaultValue);
+        $setting->setDisplayName($displayName);
+        $setting->setDescription($description);
         $setting->setType($type);
         return $setting;
     }
@@ -43,6 +45,16 @@ class Setting {
      * @ORM\Column(type="text")
      */
     private $type;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $displayName;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
 
     public function getId(): ?int
     {
@@ -93,6 +105,43 @@ class Setting {
     public function setType(string $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return array[Setting] - All the defaults settings
+     */
+    public static function defaultSettings() : array {
+        $settings = [];
+
+        $settings["version"] = self::create("settings.version", "", "", "hidden", ['currentVersion' => 0.2]);
+        $settings[] = self::create("footer.text", "Textbereich Fußzeile", "Dieser Text wird in der Textzeile des Footers im Frontend dargestellt", "text", ["text" => "Bitte diesen Text ersetzen!"]);
+        $settings[] = self::create("index.description", "Beschreibung auf der Startseite", "Auf der Startseite befindet sich ein weiterer Textbereich.", "text", ["text" => "Bitte diesen Text ersetzen!"]);
+
+        return $settings;
+    }
+
+    public function getDisplayName(): ?string
+    {
+        return $this->displayName;
+    }
+
+    public function setDisplayName(string $displayName): self
+    {
+        $this->displayName = $displayName;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }

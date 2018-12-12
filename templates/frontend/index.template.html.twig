@@ -1,4 +1,8 @@
-{% include('frontend/header.html.twig') %}
+{% extends('frontend/frontend.base.html.twig') %}
+
+{% block title %}Startseite - Schülerblog Gymnasium Oesede{% endblock %}
+
+{% block content %}
 
     <div class="startseite-eyecatcher">
 
@@ -29,7 +33,7 @@
                         <div class="image-container" data-href="/posts/{{ post.slug }}">
                             <img src="/images/post_thumpnail/{{ post.id }}" alt="Beitragsbild">
                             <div class="post-overlay">
-                                <i class="fas fa-clock"></i> - {{ post.date | date('d.m.Y') }} <i style="margin-left: 15px;" class="fas fa-user"></i> {{ post.owner.username }}
+                                <i class="fas fa-clock"></i> - {{ post.date | date('d.m.Y') }} <i style="margin-left: 15px;" class="fas fa-user"></i> {{ post.owner.displayName }}
                             </div>
                         </div>
                     </div>
@@ -47,4 +51,5 @@
 
     </div>
 
-{% include('frontend/footer.html.twig') %}
+
+{% endblock %}

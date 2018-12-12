@@ -3,7 +3,7 @@ $(document).ready(function() {
     tinymce.init({
         selector: 'textarea.tinymce',
         height: 500,
-        theme: 'modern',
+        theme: 'silver',
         plugins: 'print preview fullpage searchreplace autolink directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists textcolor wordcount imagetools contextmenu colorpicker textpattern help',
         toolbar1: 'formatselect | bold italic strikethrough forecolor backcolor | link | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent  | removeformat',
         images_upload_url: '/dashboard/media/upload',
@@ -17,9 +17,9 @@ $(document).ready(function() {
         language: 'de',images_upload_handler: function (blobInfo, success, failure) {
             let xhr, formData;
 
-            let url = '/dashboard/media/upload/post/';
+            let url = '/dashboard/media/upload/';
 
-            if('#postType'.data('type') === 'page') {
+            if($('#postType').data('type') === 'page') {
                 url = '/dashboard/admin/media/upload/';
             }
 

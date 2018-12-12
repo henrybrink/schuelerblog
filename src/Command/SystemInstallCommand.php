@@ -53,36 +53,57 @@ class SystemInstallCommand extends ContainerAwareCommand
 
             if($question) {
 
-                // Datenbank initinieren
-                $app = new Application($this->kernel);
-                $app->setAutoExit(false);
-
-                $cmd_input = new ArrayInput([
+                // Datenbank einrichten
+                $command = $this->getApplication()->find("doctrine:migrations:migrate");
+                $command->run(new ArrayInput([
                     'command' => 'doctrine:migrations:migrate'
-                ]);
+                ]), new NullOutput());
 
-                $app->run($cmd_input, new NullOutput());
+                $em = $this->getContainer()->get('doctrine')->getManager();
 
                 $helper = $this->getHelper('question');
 
-                // Benutzer einrichten
-                $user = new User();
+                if($io->confirm("Möchtest du nun einen neuen Benutzer erstellen?", "yes") == true) {
+                    // Benutzer einrichten
+                    $user = new User();
 
-                $io->writeln("Bitte erstelle nun einen neuen Benutzer!");
-                $user->setUsername($helper->ask($input, $output, new Question("Benutzername?")));
-                $user->setPassword($this->passwordEncoder->encodePassword($user, $helper->ask($input, $output, new Question("Passwort?"))));
-                $user->setEmail($helper->ask($input, $output, new Question("E-Mailadresse?")));
-                $user->setDisplayName("Administrator");
-                $user->setRoles(["ROLE_ADMIN"]);
+                    $io->writeln("Bitte erstelle nun einen neuen Benutzer!");
+                    $user->setUsername($helper->ask($input, $output, new Question("Benutzername? : ")));
 
-                /** @var EntityManagerInterface $em */
-                $em = $this->getContainer()->get('doctrine')->getManager();
-                $em->persist($user);
-                $em->flush();
+                    $passwordQuestion = new Question("Passwort? :");
+                    $passwordQuestion->setHidden(true);
 
-                $io->success("Der Benutzer wurde erfolgreich erstellt!");
+                    $user->setPassword($this->passwordEncoder->encodePassword($user, $helper->ask($input, $output, $passwordQuestion)));
+                    $user->setEmail($helper->ask($input, $output, new Question("E-Mailadresse? : ")));
+                    $user->setDisplayName("Systemadministrator");
+                    $user->setRoles(["ROLE_ADMIN"]);
+
+                    /** @var EntityManagerInterface $em */
+                    $em->persist($user);
+                    $em->flush();
+
+                    $io->success("Der Benutzer wurde erfolgreich erstellt!");
+                } else{
+                    $io->writeln("Okay. Es wird kein Benutzer erstellt. Du kannst jederzeit mit dem Befehl user:create einen Benuter anlegen!");
+                }
+
                 $io->writeln("Das System wird nun initialisiert, bitte habe einen Moment geduld!");
 
+                /* Init Settings */
+                $settings = Setting::defaultSettings();
+                foreach ($settings as $setting) {
+                    $em->persist($setting);
+                }
+                $em->flush();
+
+                $io->success("Es werden nun einige Datenbankeinträge erstellt. Bitte gedulde dich einen Moment");
+
+                /* Init Settings */
+                $settings = Setting::defaultSettings();
+                foreach ($settings as $setting) {
+                    $em->persist($setting);
+                }
+                $em->flush();
             } else {
                 $io->error("Du hast die Installation abgebrochen!");
                 exit;
@@ -90,7 +111,7 @@ class SystemInstallCommand extends ContainerAwareCommand
 
         } else {
 
-            $io->caution("Es wurde noch keine Konfigurationsdatei angelegt, bitte erledige dies bevor du das System installieren kannst");
+            $io->error("Es wurde noch keine Konfigurationsdatei angelegt, bitte erledige dies bevor du das System installieren kannst");
 
             /* /* MySQL Zugangsdaten - bevor hier irgendetwas passiert, müssen wir zunächst die Zugangsdaten abchecken!
             /** @var QuestionHelper $helper
@@ -109,7 +130,6 @@ class SystemInstallCommand extends ContainerAwareCommand
             $ms_pass = $helper->ask($input, $output, $ms_pass_q); */
 
         }
-
 
         $io->success('Das System wurde erfolgreich installiert - viel Spaß mit deinem Schülerblog!');
     }

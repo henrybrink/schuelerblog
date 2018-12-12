@@ -5,11 +5,15 @@ namespace App\Controller;
 use App\Entity\AttachedImage;
 use App\Entity\Page;
 use App\Entity\Post;
+use App\Entity\Setting;
 use App\Entity\User;
 use App\Form\TinymceType;
 use App\Repository\PageRepository;
 use App\Repository\PostRepository;
+use App\Repository\SettingRepository;
 use App\Repository\UserRepository;
+use Doctrine\DBAL\Connection;
+use Doctrine\ORM\EntityManagerInterface;
 use http\Env\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -296,6 +300,65 @@ class AdminController extends AbstractController {
         $em->flush();
 
         return $this->redirectToRoute('pagesList');
+    }
+
+    /**
+     * @Route("/config", name="configSystem")
+     */
+    public function systemConfig(SettingRepository $settings) {
+        $currentSetting = $settings->findOneBy(['name' => 'settings.version']);
+        $currentVersion = ($currentSetting !== null) ? $currentSetting->getValue()['currentVersion'] : 0;
+        $needsUpdate = ($currentVersion >= Setting::defaultSettings()['version']->getValue()['currentVersion']);
+        $needsUpdate = false;
+
+        return $this->render('admin/config/settings.list.html.twig', [
+            'needsUpdate' => $needsUpdate,
+            'settings' => $settings->findAll()
+        ]);
+    }
+
+    /**
+     * @Route("/config/reset", name="configReset")
+     */
+    public function resetConfig(Connection $connection, EntityManagerInterface $em) {
+        $stmt = $connection->prepare("DELETE from `setting`");
+        $stmt->execute();
+
+        $settings = Setting::defaultSettings();
+        foreach ($settings as $setting) {
+            $em->persist($setting);
+        }
+        $em->flush();
+
+        return $this->redirectToRoute('configSystem');
+    }
+
+    /**
+     * @Route("/config/edit/{id}", name="configEdit")
+     */
+    public function editConfig($id, Request $request, SettingRepository $settings) {
+        $setting = $settings->find($id);
+
+        if($settings == null) {
+            throw $this->createNotFoundException("Setting not found.");
+        }
+
+        $form = $this->createFormBuilder($setting)
+            ->add('value', TextType::class, ['label' => "Einstellung"])
+            ->add('defaultValue', TextType::class, ['label' => "Ursprungskonfiguration", 'disabled' => true])
+            ->add('submit', SubmitType::class, ['label' => "Speichern"])
+            ->getForm();
+
+        if($form->handleRequest($request) && $form->isSubmitted() && $form->isValid()) {
+            $setting = $form->getData();
+
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
+        }
+
+        return $this->render('admin/config/edit.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
 }
