@@ -336,7 +336,7 @@ class AdminController extends AbstractController {
     /**
      * @Route("/config/edit/{id}", name="configEdit")
      */
-    public function editConfig($id, Request $request, SettingRepository $settings) {
+    public function editConfig($id, \Symfony\Component\HttpFoundation\Request $request, SettingRepository $settings) {
         $setting = $settings->find($id);
 
         if($settings == null) {

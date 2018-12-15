@@ -64,7 +64,6 @@ class DashboardController extends AbstractController
         if($this->isGranted("ROLE_ADMIN")) {
             $form = $this->createFormBuilder($post)
                 ->add('title', TextType::class, array('label' => "Titel deines Beitrages"))
-                ->add('slug', TextType::class, array('label' => "URL (kleinbuchstaben, keine Sonderzeichen ausgenommen -, keine umlaute!)"))
                 ->add('description', TextareaType::class, array('label' => "Kurze Beschreibung deines Artikels (feed)"))
                 ->add('type', ChoiceType::class, array(
                     'choices' => [
@@ -78,7 +77,6 @@ class DashboardController extends AbstractController
         } else {
             $form = $this->createFormBuilder($post)
                 ->add('title', TextType::class, array('label' => "Titel deines Beitrages"))
-                ->add('slug', TextType::class, array('label' => "URL (kleinbuchstaben, keine Sonderzeichen ausgenommen -, keine umlaute!)"))
                 ->add('description', TextareaType::class, array('label' => "Kurze Beschreibung deines Artikels (feed)"))
                 ->add('submit', SubmitType::class, array('label' => 'Weiter'))
                 ->getForm();
@@ -93,6 +91,7 @@ class DashboardController extends AbstractController
             $post->setDate(new \DateTime());
             $post->setPublished(false);
             $post->setDenied(false);
+            $post->setSlug(strtolower(str_replace([" ", "ä", "ü", "ö", "ß", "ẞ", "\\", "\"", "_"], ["-", "ae", "ue", "oe", "ss", "s", "", "", "-"], $post->getTitle())));
 
             if($post->getType() == "PAGE") {
                 $post->setPublished(true);

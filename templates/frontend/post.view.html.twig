@@ -1,20 +1,31 @@
-{% include('frontend/header.html.twig') %}
+{% extends('frontend/frontend.base.html.twig') %}
 
-<div class="site-eyecatcher">
-    <h1>{{ post.title }}</h1>
-    <div class="site-eyecatcher-overlay"></div>
-</div>
+{% block title %}{{ post.title }} - Schülerblog Gymnasium Oesede{% endblock %}
 
-<div class="textcontainer" id="textcontainer-startseite">
+{% block site_title %}{{ post.title }}{% endblock %}
+
+{% block content %}
 
     <div class="image-container">
         <img src="{{ path('loadPostImage', {'post': post.id}) }}" ">
     </div>
 
     {% autoescape %}
-    <p>{{ post.content | raw }}</p>
+        <p>{{ post.content | raw }}</p>
     {% endautoescape %}
 
-</div>
+    <h2>Kommentare</h2>
+    {% if app.session is defined and app.session.get("can_comment") == false %}
+        <p>Nur Schüler und Lehrer des Gymnasiums Oesede können Kommentare verfassen, für die Kommentare gilt die <a href="https://gymnasium-oesede.de/schulordnung/">Netiquette</a> des Gymnasiums Oesede
+            Um einen Kommentar zu verfassen, muss ein Benutzer sich per IServ authentifizieren, dazu den Knopf "Mit IServ anmelden" verwenden
+        </p>
+        <button class="button iserv" onclick="window.location.href = '/api/auth/authenticate'">Mit IServ anmelden</button>
+    {% else %}
+        <div class="comment-form-container">
+            {{ form_start(comment) }}
+            {{ form_widget(comment) }}
+            {{ form_end(comment) }}
+        </div>
+    {% endif %}
 
-{% include('frontend/footer.html.twig') %}
+{% endblock %}

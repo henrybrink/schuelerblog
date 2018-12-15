@@ -609,3 +609,43 @@ h3 {
     }
 
 }
+
+.ui.form {
+    padding: 15px;
+}
+
+.ui.form input {
+    display: block;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid darkgray;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+}
+.ui.form label {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.ui.form .field {
+    margin-bottom: 10px;
+}
+
+.ui.form textarea {
+    display: block;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border: 1px solid darkgray;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    padding: 10px;
+    font-family: 'Fira Sans', sans-serif;
+    font-size: 13px;
+}

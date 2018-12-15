@@ -1,22 +1,27 @@
 {% extends('frontend/frontend.base.html.twig') %}
 
+{% set override_eyecathcer = true %}
+
 {% block title %}Startseite - Schülerblog Gymnasium Oesede{% endblock %}
 
-{% block content %}
+{% block outside %}
+<div class="startseite-eyecatcher">
 
-    <div class="startseite-eyecatcher">
+    <div class="eyecatcher-border"></div>
+    <div class="eyecatcher-overlay">
 
-        <div class="eyecatcher-border"></div>
-        <div class="eyecatcher-overlay">
-
-            <div class="gymoe-txtcontainer">
-                <div><span id="txtcont-hd">Gymnasium Oesede</span>
-                    <span id="txt-50">Schülerblog</span></div>
-            </div>
-
+        <div class="gymoe-txtcontainer">
+            <div><span id="txtcont-hd">Gymnasium Oesede</span>
+                <span id="txt-50">Schülerblog</span></div>
         </div>
 
     </div>
+
+</div>
+{% endblock %}
+
+{% block content %}
+
 
     <div class="textcontainer" id="textcontainer-startseite">
 

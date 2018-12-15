@@ -3,9 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\AttachedImage;
+use App\Entity\Comment;
 use App\Entity\Post;
+use App\Repository\IServUserRepository;
 use App\Repository\PageRepository;
+use App\Repository\UserRepository;
+use http\Env\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,11 +30,29 @@ class FrontendController extends AbstractController
     /**
      * @Route("/posts/{slug}", name="showPost")
      */
-    public function viewPost($slug) {
+    public function viewPost($slug, \Symfony\Component\HttpFoundation\Request $request, IServUserRepository $userRepository) {
         $post = $this->getDoctrine()->getRepository(Post::class)->findOneBy(array('slug' => $slug));
 
         if(!$post || !$post->getPublished()) {
             throw $this->createNotFoundException("This post can't be found");
+        }
+
+        $comment_form = null;
+        if($request->getSession()->get("can_comment") == true) {
+            $comment = new Comment();
+            $comment->setOwner($userRepository->findOneBy(['username' => $request->getSession()->get("comment_user")]));
+            $comment->setPublic(false);
+            $comment->setDate(new \DateTime());
+
+            $comment_form = $this->createFormBuilder($comment)
+                ->add("title", TextType::class, ['label' => "Titel des Kommentares"])
+                ->add("content", TextareaType::class, ['label' => "Inhalt deines Kommentares"])
+                ->add('submit', SubmitType::class, ['label' => "Kommentar einreichen"])
+                ->getForm();
+
+
+            return $this->render("frontend/post.view.html.twig", array("post" => $post, "comment" => $comment_form->createView()));
+
         }
 
         return $this->render("frontend/post.view.html.twig", array("post" => $post));

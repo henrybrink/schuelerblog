@@ -46,11 +46,14 @@
 
 </div>
 
+{% block outside %}{% endblock %}
 
-<div class="site-eyecatcher">
-    <h1>{% block site_title %}{% endblock %}</h1>
-    <div class="site-eyecatcher-overlay"></div>
-</div>
+{% if override_eyecathcer is not defined%}
+    <div class="site-eyecatcher">
+        <h1>{% block site_title %}{% endblock %}</h1>
+        <div class="site-eyecatcher-overlay"></div>
+    </div>
+{% endif %}
 
 <div class="textcontainer">
     {% block content %} {% endblock %}
@@ -66,6 +69,7 @@
                 {% if is_granted("ROLE_EDITOR") %}
                     <li><a href="/dashboard">Dashboard</a></li>
                 {% endif %}
+                <li><a href="/api/auth/authenticate">Mit IServ anmelden</a></li>
             </ul>
         </div>
 

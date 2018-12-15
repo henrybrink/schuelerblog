@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Post;
 use App\Form\TinymceType;
+use App\Repository\CommentRepository;
 use App\Repository\PostRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -138,6 +139,17 @@ class ModerationController extends AbstractController {
             'form' => $form->createView(),
             'tinymce' => true,
             'step' => 1
+        ]);
+    }
+
+    /**
+     * @Route("/comments", name="commentsList")
+     */
+    public function listComments(CommentRepository $commentRepository) {
+        $comments = $commentRepository->findBy(['public' => false], ['date' => "ASC"]);
+
+        return $this->render('dashboard/mod/mod.comments.html.twig', [
+            'comments' => $comments
         ]);
     }
 

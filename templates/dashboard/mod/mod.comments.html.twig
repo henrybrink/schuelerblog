@@ -1,0 +1,26 @@
+{% extends 'db.template.html.twig' %}
+
+{% block content %}
+
+    <h1>Moderation - Beiträge</h1>
+
+    {% for message in app.flashes('status') %}
+        <div class="ui primary message">{{ message }}</div>
+    {% endfor %}
+
+    <h2>Warteschlange</h2>
+    <p>Folgende Kommentare befinden sich in der Warteschlange:</p>
+
+    <div class="comment-container">
+        {% for comment in comments %}
+            <div class="ui card">
+                <div class="content"><span class="heading">{{ comment.title }}</span></div>
+                <div class="content">
+                    <span class="heading">Beitrag: {{ comment.linkedPost.title }} - Datum: {{ comment.date | date('d.m.Y H:i') }} - Benutzer: {{ comment.owner.displayName }}</span>
+                    {{ comment.content }}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}
