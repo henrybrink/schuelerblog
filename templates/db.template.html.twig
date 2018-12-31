@@ -5,80 +5,93 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-    <title>{% block title %}Dashboard - Gymnasium Oesede SCHÜLERBLOG{% endblock %}</title>
+    <title>{% block title %}Dashboard{% endblock %} - Gymnasium Oesede Schülerblog</title>
 
     {% block stylesheets %}
-        <link rel="stylesheet" href="{{ asset('/assets/semantic/semantic.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('/assets/css/dashboard.css') }}">
+        <link rel="stylesheet" href="/assets/semantic/semantic.min.css">
+        <link rel="stylesheet" href="/assets/css/dashboard.css">
     {% endblock %}
 
     {% block scripts %}
-        <script src="{{ asset('/assets/js/jquery-3.3.1.min.js') }}"></script>
+        <script src="/assets/js/jquery-3.3.1.min.js"></script>
         <script src="/assets/semantic/semantic.min.js"></script>
         <script src="https://assets.henrybrink.de/fontawesome/js/all.js"></script>
+        <script src="/assets/js/dashboard.js"></script>
         {% if tinymce is defined and tinymce %}
-        <script src="{{ asset('/assets/tinymce/tinymce.min.js') }}"></script>
-        <script src="{{ asset('/assets/js/tinymce.js') }}"></script>
+        <script src="/assets/tinymce/tinymce.min.js"></script>
+        <script src="/assets/js/tinymce.js"></script>
         {% endif %}
         <script>
             $(document).ready(function() {
                 $('.ui.dropdown').dropdown();
             });
-
         </script>
     {% endblock %}
 </head>
 
 <body>
 
-<div class="ui sticky menu">
-
-    <span class="item">Schülerblog</span>
-
-    {% if is_granted("IS_AUTHENTICATED_FULLY") %}
-
-        <a class="item" href="/dashboard/">Dashboard</a>
-
-        <div class="ui dropdown item">
-            Beiträge
-            <i class="dropdown icon"></i>
-            <div class="menu">
-                <a class="item" href="/dashboard/posts/add"><i class="fas fa-plus"></i> Hinzufügen</a>
-                <a class="item" href="/dashboard/posts/list/my"><i class="fas fa-list"></i> Meine Beiträge</a>
-            </div>
-        </div>
-
-
-        {% if is_granted('ROLE_MOD') %}
-            <div class="ui dropdown item">
-                Moderation <i class="dropdown icon"></i>
-                <div class="menu">
-                    <a href="/dashboard/moderation/posts" class="item"><i class="fas fa-list"></i> Beiträge</a>
-                </div>
-            </div>
-        {% endif %}
-
-        {% if is_granted('ROLE_ADMIN') %}
-            <div class="ui dropdown item">
-                Administration <i class="dropdown icon"></i>
-                <div class="menu">
-                    <a href="/dashboard/admin/users/" class="item"><i class="fas fa-users"></i> Benutzer</a>
-                    <a href="/dashboard/admin/pages" class="item"><i class="fas fa-file"></i> Seiten</a>
-                    <a href="/dashboard/admin/config/" class="item"><i class="fas fa-cog"></i> Einstellungen</a>
-                </div>
-            </div>
-        {% endif %}
-
-        <a class="item" href="/logout">Abmelden</a>
-
-    {% endif %}
+<div class="ui sticky menu" id="dashboardMenu">
+    <span class="item">Verwaltung - Schülerblog</span>
+    <div class="right menu">
+        <span class="open sidebar item clickable" onclick="$('.ui.sidebar').sidebar('toggle');"><i class="fas fa-bars"></i>  Menu</span>
+    </div>
 </div>
 
-<div class="ui container">
+<div class="ui inverted sidebar right vertical menu">
+
+        {% if is_granted("IS_AUTHENTICATED_FULLY") %}
+
+            <a class="item heading" href="{{ path('dashboard') }}">Dashboard</a>
+            <div class="item">
+                <span class="heading">Beiträge</span>
+                <div class="menu">
+                    <a class="item" href="{{ path('addPost') }}"><i class="fas fa-plus"></i> Hinzufügen</a>
+                    <a class="item" href="{{ path('loadPosts') }}"><i class="fas fa-list"></i> Meine Beiträge</a>
+                </div>
+            </div>
+
+            {% if is_granted('ROLE_MOD') %}
+                <div class="item">
+                    <span class="heading">Moderation</span>
+                    <div class="menu">
+                        <a class="item" href="{{ path('listPosts') }}"><i class="fas fa-file"></i> Beiträge</a>
+                        <a class="item" href="{{ path('commentsList') }}"><i class="fas fa-comments"></i> Kommentare</a>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if is_granted('ROLE_ADMIN') %}
+                <div class="item">
+                    <span class="heading">Administration</span>
+                    <div class="menu">
+                        <a class="item" href="{{ path('listUsers') }}"><i class="fas fa-users"></i> Benutzer</a>
+                        <a class="item" href="{{ path('pagesList') }}"><i class="fas fa-file"></i> Seiten</a>
+                        <a class="item" href="{{ path('listCategories') }}"><i class="fas fa-th"></i> Kategorien</a>
+                    </div>
+                </div>
+             {% endif %}
+
+            <a class="item" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt"></i> Abmelden</a>
+        {% endif %}
+
+        <a class="item" href="/">Startseite</a>
+
+</div>
+
+<div class="page-header">
+    <span>{{ block('title') }}</span>
+</div>
+
+<div class="ui container" id="app">
 {% block content %}{% endblock %}
 </div>
 
+<script src="{{ asset('build/js/app.js') }}"></script>
+
 <!-- Optionaler Platz für weiteres JavaScript -->
-    {% block extra_js %}{% endblock %}
+{% block optional_js %}{% endblock %}
+<br/>
+<br />
 </body>
 </html>

@@ -1,0 +1,18 @@
+{% extends('db.template.html.twig') %}
+
+{% block title %}Einstellungen{% endblock %}
+
+{% block content %}
+
+        {% for message in app.flashes('success') %}
+                <div class="ui positive message">{{ message }}</div>
+        {% endfor %}
+
+        <h1>Passwort ändern</h1>
+        <p>Bitte beachte: Dein Passwort sollte sich von deinem IServ-Passwort unterscheiden, außerdem sollte es die gängigen Kriterien erfüllen, bzw. lang genug sein.</p>
+
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
+
+{% endblock %}

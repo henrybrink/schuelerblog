@@ -60,11 +60,17 @@ class User implements UserInterface
      */
     private $pages;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Category", mappedBy="access")
+     */
+    private $accessibleCategories;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
         $this->attachedImages = new ArrayCollection();
         $this->pages = new ArrayCollection();
+        $this->accessibleCategories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -252,6 +258,34 @@ class User implements UserInterface
             if ($page->getOwner() === $this) {
                 $page->setOwner(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Category[]
+     */
+    public function getAccessibleCategories(): Collection
+    {
+        return $this->accessibleCategories;
+    }
+
+    public function addAccessibleCategory(Category $accessibleCategory): self
+    {
+        if (!$this->accessibleCategories->contains($accessibleCategory)) {
+            $this->accessibleCategories[] = $accessibleCategory;
+            $accessibleCategory->addAccess($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAccessibleCategory(Category $accessibleCategory): self
+    {
+        if ($this->accessibleCategories->contains($accessibleCategory)) {
+            $this->accessibleCategories->removeElement($accessibleCategory);
+            $accessibleCategory->removeAccess($this);
         }
 
         return $this;

@@ -1,0 +1,41 @@
+{% extends('db.template.html.twig') %}
+
+{% block title %}Kategorien{% endblock %}
+
+{% block content %}
+
+    <h1>Kategorien</h1>
+
+    {% for message in app.flashes('success') %}
+        <div class="ui positive message">{{ message }}</div>
+    {% endfor %}
+
+    <p>Auf dieser Seite ist es möglich die Kategorien des Blogsystems zu verwalten, Kategorien können Benutzern zugewiesen werden - um z.B. ein Ressort zu erstellen. Ein Benutzer kann Kategorien nur auswählen, wenn er mindestens eine Kategorie zugewiesen hat. Ein Beitrag kann immer nur eine Kategorie zugewiesen bekommen.</p>
+
+    <a class="ui primary button" href="{{ path('createCategory') }}">Kategorie erstellen</a>
+
+    <table class="ui table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Benutzer</th>
+                <th>Aktionen</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for category in categories %}
+                <tr>
+                    <td>{{ category.name }}</td>
+                    {% if category.public is defined and category.public %}
+                        <td>Alle Benutzer</td>
+                    {% else %}
+                        <td>{% for user in category.access %}{{ user.displayName }}{% endfor %}</td>
+                    {% endif %}
+                    <td><a href="{{ path('editCategory', {"id": category.id}) }}">Bearbeiten</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

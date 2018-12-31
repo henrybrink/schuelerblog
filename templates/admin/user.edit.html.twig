@@ -1,13 +1,24 @@
 {% extends 'db.template.html.twig' %}
 
-    {% block content %}
+{% block title %}Benutzer bearbeiten{% endblock %}
+
+{% block content %}
         {% for message in app.flashes('success') %}
             <div class="ui positive message">{{ message }}</div>
         {% endfor %}
 
-        <h1>Benutzer erstellen</h1>
+        <h1>Benutzer bearbeiten</h1>
 
         {{ form_start(form) }}
-            {{ form_widget(form) }}
-            {{ form_end(form) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
+
+
+        <div class="ui fluid card">
+            <div class="content">Benutzeraktionen</div>
+            <div class="content">
+                <a id="resetPassword" class="ui primary button" href="{{ path('resetPassword', {'id': user.id}) }}">Passwort zurücksetzen</a>
+            </div>
+        </div>
+
 {% endblock %}

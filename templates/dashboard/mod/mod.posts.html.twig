@@ -1,5 +1,7 @@
 {% extends 'db.template.html.twig' %}
 
+{% block title %}Moderation - Beiträge{% endblock %}
+
 {% block content %}
 
     {% for post in published_posts %}
@@ -32,6 +34,7 @@
             </div>
         </div>
     {% endfor %}
+
 
     <h1>Moderation - Beiträge</h1>
 
@@ -66,6 +69,15 @@
 
     </table>
 
+    {% if posts | length == 0 %}
+        <div class="ui placeholder segment">
+            <div class="ui icon header">
+                <i class="dont icon"></i>
+                Es gibt aktuell keine Beiträge in der Moderation
+            </div>
+        </div>
+    {% endif %}
+
     <h2>Öffentliche Beitrage</h2>
     <p>Alle diese Beiträge sind bereits online und können bearbeitet oder gelöscht werden.</p>
 
@@ -86,7 +98,7 @@
                 <td>{{ post.title }}</td>
                 <td>Beitrag</td>
                 <td>{{ post.owner.displayName }}</td>
-                <td><button onclick="$('#post_delete_{{ post.id }}').modal('show')" class="ui negative button">Löschen</button><a class="ui secondary button" href="/dashboard/posts/edit/{{ post.id }}">Bearbeiten</a></td>
+                <td><button onclick="$('#post_delete_{{ post.id }}').modal('show')" class="ui negative button">Löschen</button><a class="ui secondary button" href="{{ path('modEditPost', {'id': post.id}) }}">Bearbeiten</a></td>
             </tr>
         {% endfor %}
         </tbody>

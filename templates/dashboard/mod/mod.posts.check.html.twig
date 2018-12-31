@@ -1,5 +1,7 @@
 {% extends 'db.template.html.twig' %}
 
+{% block title %}Beitrag überprüfen{% endblock %}
+
 {% block content %}
 
     <div class="ui modal">
@@ -103,6 +105,8 @@
                 <div class="content">
                     <a href="/dashboard/moderation/posts/approve/{{ post.id }}" class="ui positive button fluid"><i class="fas fa-check"></i> Freischalten</a> <br />
                     <button onclick="$('.ui.modal').modal('show');" class="ui negative button fluid"><i class="fas fa-lock"></i> Sperren</button>
+                    <br />
+                    <a class="ui secondary button fluid" href="{{ path('modEditPost', {"id": post.id}) }}"><i class="fas fa-edit"></i> Bearbeiten</a>
                 </div>
             </div>
 

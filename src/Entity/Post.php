@@ -49,10 +49,6 @@ class Post
      */
     private $options = [];
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true, nullable=true)
-     */
-    private $published;
 
     /**
      * @ORM\Column(type="json", nullable=true)
@@ -75,25 +71,66 @@ class Post
     private $attachedImages;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $denied;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $type;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="linkedPost", orphanRemoval=true)
      */
     private $comments;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="posts")
+     */
+    private $category;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $showThumpnail;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    private $status;
 
     public function __construct()
     {
         $this->attachedImages = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->status = "saved";
     }
+
+    /* Status */
+    public function isPublished() {
+        return ($this->status == "public");
+    }
+
+    public function isQueued() {
+        return ($this->status == "inQueue");
+    }
+
+    public function isSaved() {
+        return ($this->status == "saved" || $this->status == null);
+    }
+
+    public function isDenied() {
+        return ($this->status == "denied");
+    }
+
+    public function queue() {
+        $this->status = "inQueue";
+    }
+
+    public function approve() {
+        $this->status = "public";
+    }
+
+    public function deny() {
+        $this->status = "denied";
+    }
+
+    public function getStatus() {
+        return $this->status;
+    }
+
+    /* End status section */
 
     public function getId(): ?int
     {
@@ -172,18 +209,6 @@ class Post
         return $this;
     }
 
-    public function getPublished(): ?bool
-    {
-        return $this->published;
-    }
-
-    public function setPublished(?bool $published): self
-    {
-        $this->published = $published;
-
-        return $this;
-    }
-
     public function getProposedChanges(): ?array
     {
         return $this->proposed_changes;
@@ -251,30 +276,6 @@ class Post
         return $this;
     }
 
-    public function getDenied(): ?bool
-    {
-        return $this->denied;
-    }
-
-    public function setDenied(?bool $denied): self
-    {
-        $this->denied = $denied;
-
-        return $this;
-    }
-
-    public function getType(): ?string
-    {
-        return $this->type;
-    }
-
-    public function setType(?string $type): self
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
     /**
      * @return Collection|Comment[]
      */
@@ -305,4 +306,30 @@ class Post
 
         return $this;
     }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function getShowThumpnail(): ?bool
+    {
+        return $this->showThumpnail;
+    }
+
+    public function setShowThumpnail(?bool $showThumpnail): self
+    {
+        $this->showThumpnail = $showThumpnail;
+
+        return $this;
+    }
+
+
 }

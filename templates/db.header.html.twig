@@ -5,26 +5,25 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-        <title>{% block title %}Dashboard - Gymnasium Oesede SCHÜLERBLOG{% endblock %}</title>
+        <title>{% block title %}Dashboard{% endblock %} - Gymnasium Oesede Schülerblog</title>
 
         {% block stylesheets %}
-            <link rel="stylesheet" href="{{ asset('/assets/semantic/semantic.min.css') }}">
-            <link rel="stylesheet" href="{{ asset('/assets/css/dashboard.css') }}">
+            <link rel="stylesheet" href="/assets/semantic/semantic.min.css">
+            <link rel="stylesheet" href="/assets/css/dashboard.css">
         {% endblock %}
 
         {% block scripts %}
-            <script src="{{ asset('/assets/js/jquery-3.3.1.min.js') }}"></script>
+            <script src="/assets/js/jquery-3.3.1.min.js"></script>
             <script src="/assets/semantic/semantic.min.js"></script>
             <script src="https://assets.henrybrink.de/fontawesome/js/all.js"></script>
             {% if tinymce is defined and tinymce %}
-            <script src="{{ asset('/assets/tinymce/tinymce.min.js') }}"></script>
-            <script src="{{ asset('/assets/js/tinymce.js') }}"></script>
+            <script src="'/assets/tinymce/tinymce.min.js"></script>
+            <script src="'/assets/js/tinymce.js"></script>
             {% endif %}
             <script>
                 $(document).ready(function() {
                     $('.ui.dropdown').dropdown();
                 });
-
             </script>
         {% endblock %}
     </head>
@@ -65,10 +64,11 @@
                         <div class="menu">
                             <a href="/dashboard/admin/users/" class="item"><i class="fas fa-users"></i> Benutzer</a>
                             <a href="/dashboard/admin/pages" class="item"><i class="fas fa-file"></i> Seiten</a>
-                            <a href="/dashboard/admin/config/" class="item"><i class="fas fa-cog"></i> Einstellungen</a>
                         </div>
                     </div>
                 {% endif %}
+
+                <a class="item" href="/">Frontend</a>
 
                 <a class="item" href="/logout">Abmelden</a>
 

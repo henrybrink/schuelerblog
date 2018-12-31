@@ -27,11 +27,10 @@ class ModerationController extends AbstractController {
      * @Route("/posts/", name="listPosts")
      */
     public function viewPosts() {
-        $posts = $this->getDoctrine()->getRepository(Post::class)->findBy(array('published' => false, 'denied' => false, 'type' => 'POST'));
-        $published = $this->getDoctrine()->getRepository(Post::class)->findBy(array('published' => true, 'type' => 'POST'));
-        $pages = $this->getDoctrine()->getRepository(Post::class)->findBy(array('type' => 'PAGE'));
+        $posts = $this->getDoctrine()->getRepository(Post::class)->findBy(array('status' => "inQueue"));
+        $published = $this->getDoctrine()->getRepository(Post::class)->findBy(array('status' => "public"));
 
-        return $this->render('dashboard/mod/mod.posts.html.twig', array("posts" => $posts, 'published_posts' => $published, 'pages' => $pages));
+        return $this->render('dashboard/mod/mod.posts.html.twig', array("posts" => $posts, 'published_posts' => $published));
     }
 
     /**
@@ -57,7 +56,7 @@ class ModerationController extends AbstractController {
             $this->createNotFoundException("This post couldn't be found");
         }
 
-        $post->setPublished(true);
+        $post->approve();
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->flush();
@@ -78,10 +77,9 @@ class ModerationController extends AbstractController {
             throw $this->createNotFoundException("Referenced Post couldn't be found.");
         }
 
-        $was_published = $post->getPublished();
+        $was_published = $post->isPublished();
 
-        $post->setPublished(false);
-        $post->setDenied(true);
+        $post->deny();
         $post->setOptions([
             "reason" => $request->get('reason')
         ]);
@@ -104,10 +102,10 @@ class ModerationController extends AbstractController {
     }
 
     /**
-     * @Route("/posts/edit/{post}", name="postEdit")
+     * @Route("/posts/edit/{id}", name="modEditPost")
      */
-    public function editPost($post, PostRepository $posts, Request $request) {
-        $post = $posts->find($post);
+    public function editPost($id, PostRepository $posts, Request $request) {
+        $post = $posts->find($id);
 
         if(!$post) {
             $this->createAccessDeniedException("Post not found.");
@@ -118,6 +116,7 @@ class ModerationController extends AbstractController {
             ->add('slug', TextType::class, ['label' => "URL"])
             ->add('description', TextareaType::class, ['label' => 'Beschreibung'])
             ->add('content', TinymceType::class, ['label' => 'Inhalt'])
+            ->add('summary', TextareaType::class, ['label' => "Zusammenfassung deiner Änderungen", "mapped" => false])
             ->add('submit', SubmitType::class, ['label' => "Aktualisieren"])
             ->getForm();
 
@@ -126,8 +125,9 @@ class ModerationController extends AbstractController {
             $post = $form->getData();
 
             $post->setOptions([
-                'edited' => true,
-                'editor' => $this->getUser()->getId()
+                'edited_mod' => true,
+                'editor' => $this->getUser()->getId(),
+                'edit_summary' => $form->get('summary')->getData()
             ]);
 
             $em = $this->getDoctrine()->getManager();
@@ -135,10 +135,9 @@ class ModerationController extends AbstractController {
             $this->addFlash('success', 'Der Beitrag / die Seite wurde erfolgreich bearbeitet');
         }
 
-        return $this->render("dashboard/posts.create.html.twig", [
+        return $this->render("dashboard/mod/post.edit.html.twig", [
             'form' => $form->createView(),
-            'tinymce' => true,
-            'step' => 1
+            'tinymce' => true
         ]);
     }
 
@@ -152,5 +151,44 @@ class ModerationController extends AbstractController {
             'comments' => $comments
         ]);
     }
+
+    /**
+     * @Route("/comments/approve/{id}", name="approveComment")
+     */
+    public function commentApprove($id, CommentRepository $commentRepository) {
+        $comment = $commentRepository->find($id);
+
+        if(!$comment) {
+            throw $this->createNotFoundException("Comment not found.");
+        }
+
+        $comment->setPublic(true);
+        $em = $this->getDoctrine()->getManager();
+        $em->flush();
+
+        $this->addFlash('success', "Der Kommentar wurde freigeschaltet.");
+
+        return $this->redirect("/dashboard/moderation/comments");
+    }
+
+    /**
+     * @Route("/comments/deny/{id}", name="deleteComment")
+     */
+    public function commentDelete($id, Request $request, CommentRepository $commentRepository) {
+        $comment = $commentRepository->find($id);
+
+        if(!$comment) {
+            throw $this->createNotFoundException("Comment not found.");
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($comment);
+        $em->flush();
+
+        $this->addFlash('success', "Der Kommentar wurde gelöscht.");
+
+        return $this->redirect($request->headers->get('referer'));
+    }
+
 
 }

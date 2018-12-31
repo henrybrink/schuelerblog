@@ -6,9 +6,18 @@
 
 {% block content %}
 
-    <div class="image-container">
-        <img src="{{ path('loadPostImage', {'post': post.id}) }}" ">
-    </div>
+    {% if post.category is defined and post.category.badgeVisible is defined and post.category.badgeVisible %}
+        <div class="category-box">
+            <span class="category-text">{{ post.category.name }}</span>
+            <div class="category-edge"></div>
+        </div>
+    {% endif %}
+
+    {% if post.showthumpnail is defined and post.showthumpnail %}
+        <div class="image-container">
+            <img src="{{ path('loadPostImage', {'post': post.id}) }}">
+        </div>
+    {% endif %}
 
     {% autoescape %}
         <p>{{ post.content | raw }}</p>
@@ -27,5 +36,30 @@
             {{ form_end(comment) }}
         </div>
     {% endif %}
+
+    {% for comment in post.comments %}
+        {% if comment.public or comment.owner.username == app.session.get('username') %}
+            <div class="post comment">
+                <div class="author">
+                    <div class="pb">
+                        ?
+                    </div>
+                    <div class="name">{{ comment.owner.displayName }}</div>
+                    <div class="date">{{ comment.date | date('d.m.Y H:i') }}</div>
+                </div>
+                <div class="content">
+                    {% if comment.public == false %}
+                        <div class="badge badge-yellow">Warteschlange</div>
+                    {% endif %}
+                    {{ comment.content | nl2br }}
+                </div>
+                {% if is_granted("ROLE_MOD") %}
+                    <div class="mod-controls">
+                        <a class="button small" href="{{ path('deleteComment', {"id": comment.id}) }}">Löschen</a>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% endfor %}
 
 {% endblock %}

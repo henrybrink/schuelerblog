@@ -1,0 +1,30 @@
+{% extends 'db.template.html.twig' %}
+
+{% block title %}Beitrag bearbeiten{% endblock %}
+
+{% block content %}
+
+    <div class="ui grid">
+
+        <div class="twelve wide column">
+
+            <h1>Beitrag bearbeiten</h1>
+
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            {{ form_end(form) }}
+
+        </div>
+
+        <div class="four wide column">
+
+            <div class="ui card">
+                <div class="content"><span class="heading ui yellow label">Warnung</span></div>
+                <div class="content">Bitte beachte: Der Autor dieses Beitrages erhält keine Nachricht über die Änderungen an seinem Beitrag, bitte beschränke dich auf die korrektur kleiner Mängel.</div>
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}

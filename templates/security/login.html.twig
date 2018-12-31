@@ -1,6 +1,8 @@
-{% include('db.header.html.twig') %}
+{% extends('db.template.html.twig') %}
 
-{% block body %}
+{% block title %}Anmeldung{% endblock %}
+
+{% block content %}
 
     <div class="ui container">
 
@@ -40,5 +42,3 @@
     </div>
 
 {% endblock %}
-
-{% include('db.footer.html.twig') %}

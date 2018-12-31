@@ -1,3 +1,51 @@
 .img-responsive {
     width: 100%;
 }
+
+.svg-inline--fa {
+    font-size: 15px;
+    margin-right: 3px !important;
+}
+
+#dashboardMenu {
+    background-color: #1b1b1f;
+    color: white;
+    border-radius: 0;
+    padding: 15px;
+}
+
+#dashboardMenu > .item {
+    color: white;
+    border-color: white;
+}
+
+#dashboardMenu > .menu > .item {
+    color: white;
+}
+
+.ui.card {
+    border: 2px solid lightgray;
+}
+
+.ui.negative.card {
+    border-color: #ff3139;
+}
+
+.ui.negative.card .card-header {
+    background-color: #ff3139;
+    color: white;
+    border-radius: 0 !important;
+}
+
+.page-header {
+    width: 100%;
+    background-color: #a02828;
+    color: white;
+    font-family: 'Fira Sans', sans-serif;
+    font-weight: bold;
+    text-align: center;
+    margin-top: -15px;
+    padding: 20px;
+    font-size: 20px;
+    margin-bottom: 20px;
+}

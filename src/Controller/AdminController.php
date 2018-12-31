@@ -3,24 +3,32 @@
 namespace App\Controller;
 
 use App\Entity\AttachedImage;
+use App\Entity\Category;
 use App\Entity\Page;
 use App\Entity\Post;
 use App\Entity\Setting;
 use App\Entity\User;
 use App\Form\TinymceType;
+use App\Repository\CategoryRepository;
 use App\Repository\PageRepository;
 use App\Repository\PostRepository;
 use App\Repository\SettingRepository;
 use App\Repository\UserRepository;
 use Doctrine\DBAL\Connection;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use http\Env\Request;
+use phpDocumentor\Reflection\Types\Boolean;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -142,6 +150,28 @@ class AdminController extends AbstractController {
         return $this->render('admin/user.create.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/users/resetPassword/{id}", name="resetPassword")
+     * @throws \Exception
+     */
+    public function passwordReset($id, UserRepository $repository, UserPasswordEncoderInterface $passwordEncoder) {
+        $user = $repository->find($id);
+
+        if(!$user || $user == null) {
+            throw $this->createNotFoundException("User not found");
+        }
+
+        $randomPassword = substr(md5(random_bytes(20)), 0, 10);
+
+        $user->setPassword($passwordEncoder->encodePassword($user, $randomPassword));
+
+        $em = $this->getDoctrine()->getManager();
+        $em->flush();
+
+        $this->addFlash('success', "Das Passwort wurde erfolgreich geändert. Neues Passwort: " . $randomPassword);
+        return $this->redirectToRoute('editUser', ['id' => $user->getId()]);
     }
 
     /**
@@ -343,14 +373,29 @@ class AdminController extends AbstractController {
             throw $this->createNotFoundException("Setting not found.");
         }
 
-        $form = $this->createFormBuilder($setting)
-            ->add('value', TextType::class, ['label' => "Einstellung"])
-            ->add('defaultValue', TextType::class, ['label' => "Ursprungskonfiguration", 'disabled' => true])
-            ->add('submit', SubmitType::class, ['label' => "Speichern"])
-            ->getForm();
+        $form = $this->createFormBuilder($setting);
+
+        if($setting->getType() == "choice") {
+            $form->add('value', ChoiceType::class, ['multiple' => true, 'choices' => $setting->getDefaultValue()['choices']]);
+        } else if($setting->getType() == "boolean") {
+            $form->add('value', RadioType::class, ['choices' => ['Ja.' => true, 'Nö.' => false], 'expanded' => true, 'multiple' => false]);
+        } else {
+            $form->add('value', TextType::class);
+        }
+
+        $form->add('submit', SubmitType::class, ['label' => "Speichern"]);
+        $form = $form->getForm();
 
         if($form->handleRequest($request) && $form->isSubmitted() && $form->isValid()) {
             $setting = $form->getData();
+
+            if($setting->getType() == "choice") {
+                $form->add('value', ChoiceType::class, ['multiple' => true, 'choices' => $setting->getDefaultValue()['choices']]);
+            } else if($setting->getType() == "boolean") {
+                $form->add('value', RadioType::class, ['choices' => ['Ja.' => true, 'Nö.' => false], 'expanded' => true, 'multiple' => false]);
+            } else {
+                $form->add('value', TextType::class);
+            }
 
             $em = $this->getDoctrine()->getManager();
             $em->flush();
@@ -358,7 +403,85 @@ class AdminController extends AbstractController {
 
         return $this->render('admin/config/edit.html.twig', [
             'form' => $form->createView(),
+            'setting' => $setting
         ]);
+    }
+
+    /**
+     * @Route("/category/add", name="createCategory")
+     */
+    public function categoryAdd(\Symfony\Component\HttpFoundation\Request $request, EntityManagerInterface $entityManager) {
+        $category = new Category();
+
+        $form = $this->createFormBuilder($category)
+            ->add('name', TextType::class, ['label' => "Name der Kategorie"])
+            ->add('description', TextareaType::class, ['label' => "Beschreibung der Kategorie"])
+            ->add('access', EntityType::class, ['label' => "Benutzer mit Zugriff", "multiple" => true, 'class' => "App:User", 'choice_label' => function(User $user) {
+                return $user->getDisplayName();
+            }])
+            ->add('displayHomepage', CheckboxType::class, ['label' => "Beiträge auf der Homepage anzeigen", 'required' => false])
+            ->add('public', CheckboxType::class, ['label' => "Für alle Benutzer nutzbar", 'required' => false])
+            ->add('badgeVisible', CheckboxType::class, ['label' => "Kategorie-Badge öffentlich anzeigen.", 'required' => false])
+            ->add('submit', SubmitType::class, ['label' => "Erstellen"])
+            ->getForm();
+
+        if($form->handleRequest($request) && $form->isSubmitted() && $form->isValid()) {
+            /** @var Category $category */
+            $category = $form->getData();
+
+            $category->setColor("#a02828");
+
+            $entityManager->persist($category);
+            $entityManager->flush();
+
+            $this->addFlash('success', "Die Kategorie wurd erfolgreich angelegt.");
+            return $this->redirectToRoute('listCategories');
+        }
+
+        return $this->render('admin/categories/create.category.html.twig', ['form' => $form->createView()]);
+    }
+
+    /**
+     * @Route("/categories", name="listCategories")
+     */
+    public function categoriesList(CategoryRepository $categories) {
+        return $this->render('admin/categories/list.categories.html.twig', ['categories' => $categories->findAll()]);
+    }
+
+    /**
+     * @Route("/category/edit/{id}", name="editCategory")
+     */
+    public function categoryEdit($id, CategoryRepository $repository, \Symfony\Component\HttpFoundation\Request $request) {
+        $category = $repository->find($id);
+
+        if(!$category || $category == null) {
+            throw $this->createNotFoundException("Diese Kategorie wurde nicht gefunden.");
+        }
+
+        $form = $this->createFormBuilder($category)
+            ->add('name', TextType::class, ['label' => "Name der Kategorie"])
+            ->add('description', TextareaType::class, ['label' => "Beschreibung der Kategorie"])
+            ->add('access', EntityType::class, ['label' => "Benutzer mit Zugriff", 'multiple' => true, 'class' => "App:User", 'choice_label' => function(User $user) {
+                return $user->getDisplayName();
+            }])
+            ->add('displayHomepage', CheckboxType::class, ['label' => "Beiträge auf der Homepage anzeigen", 'required' => false])
+            ->add('public', CheckboxType::class, ['label' => "Für alle Benutzer nutzbar", 'required' => false])
+            ->add('badgeVisible', CheckboxType::class, ['label' => "Kategorie-Badge öffentlich anzeigen.", 'required' => false])
+            ->add('submit', SubmitType::class, ['label' => "Speichern"])
+            ->getForm();
+
+        if($form->handleRequest($request) && $form->isSubmitted() && $form->isValid()) {
+            /** @var Category $category */
+            $category = $form->getData();
+
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
+
+            $this->addFlash('success', "Die Kategorie wurde erfolgreich gespeichert.");
+            return $this->redirectToRoute('listCategories');
+        }
+
+        return $this->render('admin/categories/edit.category.html.twig', ['form' => $form->createView()]);
     }
 
 }

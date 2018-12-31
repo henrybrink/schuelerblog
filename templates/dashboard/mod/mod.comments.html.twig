@@ -1,10 +1,12 @@
 {% extends 'db.template.html.twig' %}
 
+{% block title %}Moderation - Kommentare{% endblock %}
+
 {% block content %}
 
-    <h1>Moderation - Beiträge</h1>
+    <h1>Moderation - Kommentare</h1>
 
-    {% for message in app.flashes('status') %}
+    {% for message in app.flashes('success') %}
         <div class="ui primary message">{{ message }}</div>
     {% endfor %}
 
@@ -13,14 +15,34 @@
 
     <div class="comment-container">
         {% for comment in comments %}
-            <div class="ui card">
+            <div class="ui fluid card">
                 <div class="content"><span class="heading">{{ comment.title }}</span></div>
                 <div class="content">
-                    <span class="heading">Beitrag: {{ comment.linkedPost.title }} - Datum: {{ comment.date | date('d.m.Y H:i') }} - Benutzer: {{ comment.owner.displayName }}</span>
-                    {{ comment.content }}
+                    <div class="ui grid">
+                        <div class="four wide column">
+                            <h4 class="heading">Beitrag: {{ comment.linkedPost.title }} - Datum: {{ comment.date | date('d.m.Y H:i') }} - Benutzer: {{ comment.owner.displayName }}</h4>
+                        </div>
+                        <div class="twelve wide column">
+                            <h4>Kommentar</h4>
+                            {{ comment.content | nl2br }}
+                        </div>
+                    </div>
+                </div>
+                <div class="content">
+                    <a class="ui positive button" href="{{ path('approveComment', {"id": comment.id}) }}">Freischalten</a>
+                    <a class="ui negative button" href="{{ path('deleteComment', {"id": comment.id}) }}">Entfernen</a>
                 </div>
             </div>
         {% endfor %}
+
+        {% if comments | length == 0 %}
+            <div class="ui placeholder segment">
+                <div class="ui icon header">
+                    <i class="dont icon"></i>
+                    Es gibt aktuell keine Kommentare in der Warteschlange
+                </div>
+            </div>
+        {% endif %}
     </div>
 
 {% endblock %}
