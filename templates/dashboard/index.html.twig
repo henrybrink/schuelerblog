@@ -74,6 +74,13 @@
                         </div>
                     {% endif %}
 
+                    {% if updateAvailable is defined and updateAvailable %}
+                        <div class="ui negative card">
+                            <div class="content card-header">Update verfügbar</div>
+                            <div class="content">Es ist ein Update verfügbar, bitte aktualisiere auf die Aktuelle Version des Systemes. <br /> <a href="/admin/updater/update" class="ui primary button">Mehr Erfahren</a></div>
+                        </div>
+                    {% endif %}
+
                 {% endif %}
 
                 <div class="ui card">

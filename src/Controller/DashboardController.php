@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\AttachedImage;
-use App\Entity\Category;
 use App\Entity\Page;
 use App\Entity\Post;
 use App\Entity\User;
@@ -13,7 +12,6 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -24,9 +22,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class DashboardController extends AbstractController
@@ -47,8 +42,7 @@ class DashboardController extends AbstractController
                 'debug_mode' => $debugMode,
                 'denied_posts' => $denied_posts,
                 'denied_size' => count($denied_posts),
-                'mod_posts' => $posts->findBy(['status' => 'inQueue'])
-            ]);
+                'mod_posts' => $posts->findBy(['status' => 'inQueue'])]);
         }
 
         return $this->render('dashboard/index.html.twig', [

@@ -8,7 +8,7 @@
 
     {% if post.category is defined and post.category.badgeVisible is defined and post.category.badgeVisible %}
         <div class="category-box">
-            <span class="category-text">{{ post.category.name }}</span>
+            <span class="category-text">{{ post.category.name }} - <i class="fas fa-user"></i> {{ post.owner.displayName }}</span>
             <div class="category-edge"></div>
         </div>
     {% endif %}
